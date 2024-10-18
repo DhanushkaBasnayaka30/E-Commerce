@@ -15,6 +15,24 @@ const ShopContextProvider = (props) => {
 	const [cartItem, setCartItems] = useState({});
 	const [itemCount, setItemCount] = useState(0); // Fixed typo here
 
+	// Function to load cart data from localStorage
+	const loadCartData = () => {
+		const savedCartItem = localStorage.getItem("cartItem");
+		const savedItemCount = localStorage.getItem("itemCount");
+
+		if (savedCartItem) {
+			setCartItems(JSON.parse(savedCartItem));
+		}
+		if (savedItemCount) {
+			setItemCount(Number(savedItemCount));
+		}
+	};
+
+	// Load cart data on component mount
+	useEffect(() => {
+		loadCartData();
+	}, []);
+
 	// Add to cart function
 	const addToCart = async (itemId, size) => {
 		console.log("Item ID:", itemId);
@@ -75,9 +93,13 @@ const ShopContextProvider = (props) => {
 		const updateItemCount = async () => {
 			const count = await fetchItemCount();
 			setItemCount(count);
+
+			// Save updated cartItem and itemCount to localStorage
+			localStorage.setItem("cartItem", JSON.stringify(cartItem));
+			localStorage.setItem("itemCount", count);
 		};
 		updateItemCount();
-	}, [cartItem]); // Recalculate when cartItem changes
+	}, [cartItem]);
 
 	// Memoize the value object to avoid unnecessary re-renders
 	const value = useMemo(
