@@ -1,10 +1,14 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { ShopContext } from "../context/ShopContext";
 import { Link } from "react-router-dom";
 
 function ProductItems({ id, image, name, price }) {
 	const { currency } = useContext(ShopContext);
-
+	
+		useEffect(() => {
+			// Scroll to top when the component mounts
+			window.scrollTo(0, 0);
+		}, []); // Empty dependency array ensures this runs only on mount
 	return (
 		<>
 			<Link to={`/product/${id}`} className="text-gray-700 cursor-pointer">

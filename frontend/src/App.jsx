@@ -14,22 +14,26 @@ import Footer from "./components/Footer";
 import SearchBar from "./components/SearchBar";
 import { useContext } from "react";
 import { ShopContext } from "./context/ShopContext";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
-
-  const { search, setSearch, showSearch, setShowSearch } =
+	const { search, setSearch, showSearch, setShowSearch, visible } =
 		useContext(ShopContext);
+	
 
-    console.log(showSearch);
-    
 	return (
 		<>
-			<div className="w-full   sm:w-[90%] mx-auto ">
+			<ToastContainer />
+			<div className="w-full   sm:w-[80%] mx-auto ">
 				{/* Navbar outside the Routes */}
 				<div className="w-full top-0">
 					<Navbar />
 				</div>
-				<div className={` w-[90%] mx-auto ease-in-out  top-20 z-10 sm:fixed relative transition duration-500 bg-white ${showSearch? "translate-y-0" : "-translate-y-full"}`}>
+				<div
+					className={` w-[80%] mx-auto ease-in-out  top-20 z-10 sm:fixed relative transition duration-500  ${
+						showSearch && visible ? "translate-y-0" : "-translate-y-full"
+					}`}>
 					<SearchBar />
 				</div>
 				{/* Routes definition */}
@@ -45,7 +49,7 @@ function App() {
 					<Route path="/product/:id" element={<Product />} />
 				</Routes>
 
-				<div className="w-full ">
+				<div className="w-full relative bottom-0  mx-auto">
 					<Footer />
 				</div>
 			</div>

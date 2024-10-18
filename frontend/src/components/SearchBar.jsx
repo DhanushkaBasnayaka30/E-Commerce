@@ -4,9 +4,9 @@ import { assets } from "../assets/assets";
 import { useLocation } from "react-router-dom";
 
 function SearchBar() {
-	const { search, setSearch, showSearch, setShowSearch } =
+	const { search, setSearch, showSearch, setShowSearch,visible, setVisible } =
 		useContext(ShopContext);
-	const [visible, setVisible] = useState(false);
+	
 	const location = useLocation();
 	useEffect(() => {
 		if (location.pathname === "/collection" && showSearch) {
@@ -16,7 +16,7 @@ function SearchBar() {
 		}
 	}, [location, showSearch]);
 
-	console.log("visible,", visible, showSearch, location);
+
 	return (
 		<>
 			<div

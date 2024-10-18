@@ -4,12 +4,32 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Hide scrollbar for WebKit-based browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for Firefox */
+* {
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Hide scrollbar for Internet Explorer and Edge */
+*::-ms-scrollbar {
+  display: none;
+}
 
 a.active hr {
   display: block;
 }
 
 @layer base {
+  /* Apply Poppins globally */
+  body {
+    @apply font-sans;
+  }
+
+  /* Define custom font weights using Poppins */
   .poppins-thin {
     font-family: "Poppins", sans-serif;
     font-weight: 100;

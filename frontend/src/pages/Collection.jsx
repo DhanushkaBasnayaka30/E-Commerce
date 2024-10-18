@@ -16,8 +16,10 @@ function Collection() {
 	const { search, setSearch, showSearch, setShowSearch } =
 		useContext(ShopContext);
 
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, []);
 
-		console.log(filterproductsItems);
 	useEffect(() => {
 		setProductItems(products);
 	}, [products]);
@@ -38,11 +40,10 @@ function Collection() {
 		}
 	};
 	const applyFiltter = () => {
-
 		let productCopy = products.slice();
 
 		if (showSearch && search) {
-			productCopy = productCopy.filter(item =>
+			productCopy = productCopy.filter((item) =>
 				item.name.toLowerCase().includes(search.toLowerCase())
 			);
 		}
@@ -60,7 +61,7 @@ function Collection() {
 	};
 	useEffect(() => {
 		applyFiltter();
-	}, [category, subCategory,search,showSearch]);
+	}, [category, subCategory, search, showSearch]);
 
 	const sortPrice = () => {
 		let filltercopy = filterproductsItems.slice();
