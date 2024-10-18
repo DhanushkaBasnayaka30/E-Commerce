@@ -25,11 +25,7 @@ const navDetails = [
 		title: "CONTACT",
 		url: "/contact",
 	},
-	{
-		id: "5",
-		title: "Admin Panel",
-		url: "#",
-	},
+	
 ];
 
 function Navbar() {

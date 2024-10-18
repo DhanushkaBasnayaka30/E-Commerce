@@ -9,8 +9,8 @@ function Home() {
   
   return (
     <div className='sm:pt-28 pt-24 -28 mt- '>
-      <div className=' '><Hero/></div>
-      <div><LatestCollection/></div>
+      <div className=' ' data-aos="zoom-in"><Hero/></div>
+      <div ><LatestCollection/></div>
       <div><BestSeller/></div>
       <div><OurPolicy/></div> 
       <div className=''><NewsLatter/></div> 

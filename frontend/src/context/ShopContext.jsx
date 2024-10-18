@@ -13,7 +13,7 @@ const ShopContextProvider = (props) => {
 	const [showSearch, setShowSearch] = useState(false);
 	const [visible, setVisible] = useState(false);
 	const [cartItem, setCartItems] = useState({});
-	const [itemCount, setItemCount] = useState(0); // Fixed typo here
+	const [itemCount, setItemCount] = useState(0);
 
 	// Function to load cart data from localStorage
 	const loadCartData = () => {
@@ -35,35 +35,20 @@ const ShopContextProvider = (props) => {
 
 	// Add to cart function
 	const addToCart = async (itemId, size) => {
-		console.log("Item ID:", itemId);
-		console.log("Selected Size:", size);
-
-		// Ensure both itemId and size are provided
 		if (itemId && size) {
-			// Clone the cartItem object
 			let cartItemCopy = structuredClone(cartItem);
 
-			// Check if itemId exists in the cart
 			if (cartItemCopy[itemId]) {
-				console.log("Item found in cart");
-
-				// Check if the size exists for the item
 				if (cartItemCopy[itemId][size]) {
-					console.log("Size exists, incrementing quantity");
 					cartItemCopy[itemId][size] += 1;
 				} else {
-					console.log("New size for the item, setting quantity to 1");
 					cartItemCopy[itemId][size] = 1;
 				}
 			} else {
-				// If itemId doesn't exist, create it with the selected size
-				console.log("New item, adding to cart");
 				cartItemCopy[itemId] = { [size]: 1 };
 			}
 
-			// Update the cart state
 			setCartItems(cartItemCopy);
-			console.log("Updated Cart:", cartItemCopy);
 		} else {
 			toast.error("Select Product size");
 			return;
@@ -71,35 +56,51 @@ const ShopContextProvider = (props) => {
 	};
 
 	// Function to calculate total item count in the cart
-	const fetchItemCount = async () => {
+	const fetchItemCount = () => {
 		let total = 0;
 		for (const items in cartItem) {
-			for (const item in cartItem[items]) {
-				try {
-					if (cartItem[items][item] > 0) {
-						total += cartItem[items][item];
-					}
-				} catch (error) {
-					console.log(error);
+			for (const size in cartItem[items]) {
+				if (cartItem[items][size] > 0) {
+					total += cartItem[items][size];
 				}
 			}
 		}
-		console.log("Total items in cart:", total);
 		return total;
 	};
 
 	// Update item count whenever cartItem changes
 	useEffect(() => {
-		const updateItemCount = async () => {
-			const count = await fetchItemCount();
-			setItemCount(count);
+		const count = fetchItemCount();
+		setItemCount(count);
 
-			// Save updated cartItem and itemCount to localStorage
-			localStorage.setItem("cartItem", JSON.stringify(cartItem));
-			localStorage.setItem("itemCount", count);
-		};
-		updateItemCount();
+		// Save updated cartItem and itemCount to localStorage
+		localStorage.setItem("cartItem", JSON.stringify(cartItem));
+		localStorage.setItem("itemCount", count);
 	}, [cartItem]);
+
+	// Function to update quantity of items in the cart
+	const updateQuantity = (id, quantity, size) => {
+		if (quantity < 0) return; // Prevent negative quantity
+		let cartData = structuredClone(cartItem);
+		cartData[id][size] = quantity;
+		setCartItems(cartData);
+	};
+
+	// Function to calculate the total cart amount
+	const getCartAmount = () => {
+		let totalAmount = 0;
+		for (const items in cartItem) {
+			const itemInfo = products.find((product) => product._id === items);
+			if (!itemInfo) continue; // Skip if product is not found
+			for (const size in cartItem[items]) {
+				const quantity = cartItem[items][size];
+				if (quantity > 0) {
+					totalAmount += itemInfo.price * quantity;
+				}
+			}
+		}
+		return totalAmount;
+	};
 
 	// Memoize the value object to avoid unnecessary re-renders
 	const value = useMemo(
@@ -116,15 +117,28 @@ const ShopContextProvider = (props) => {
 			cartItem,
 			addToCart,
 			fetchItemCount,
-			itemCount, // Pass the itemCount to context
+			itemCount,
+			setItemCount,
+			setCartItems,
+			updateQuantity,
+			getCartAmount,
 		}),
-		[products, currency, delivery_fee, search, showSearch, visible, cartItem, itemCount]
+		[
+			products,
+			currency,
+			delivery_fee,
+			search,
+			showSearch,
+			visible,
+			cartItem,
+			itemCount,
+			updateQuantity,
+			getCartAmount,
+		]
 	);
 
 	return (
-		<ShopContext.Provider value={value}>
-			{props.children}
-		</ShopContext.Provider>
+		<ShopContext.Provider value={value}>{props.children}</ShopContext.Provider>
 	);
 };
 

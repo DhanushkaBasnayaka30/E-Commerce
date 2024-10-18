@@ -12,26 +12,29 @@ import Navbar from "./components/Navbar";
 import "./App.css";
 import Footer from "./components/Footer";
 import SearchBar from "./components/SearchBar";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { ShopContext } from "./context/ShopContext";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AOS from "aos";
 
 function App() {
 	const { search, setSearch, showSearch, setShowSearch, visible } =
 		useContext(ShopContext);
 	
-
+		useEffect(() => {
+			AOS.init({ duration: 2000 });
+	  }, []);
 	return (
 		<>
 			<ToastContainer />
-			<div className="w-full   sm:w-[80%] mx-auto ">
+			<div className="w-full   sm:w-[90%] mx-auto ">
 				{/* Navbar outside the Routes */}
-				<div className="w-full top-0">
+				<div className="w-full top-0 ">
 					<Navbar />
 				</div>
 				<div
-					className={` w-[80%] mx-auto ease-in-out  top-20 z-10 sm:fixed relative transition duration-500  ${
+					className={` w-[90%] mx-auto ease-in-out  top-20 z-10 sm:fixed relative transition duration-500  ${
 						showSearch && visible ? "translate-y-0" : "-translate-y-full"
 					}`}>
 					<SearchBar />

@@ -18,16 +18,16 @@ function LatestCollection() {
 
   return (
     <div className="my-10">
-      <div className="text-center py-8 text-3xl">
+      <div className="text-center py-8 text-3xl" data-aos="fade-up">
         <Title text1="LATEST" text2="COLLECTION" />
         <p className="w-3/4 m-auto text-xs sm:text-sm md:text-base text-gray-600">
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eveniet mollitia minima consectetur possimus autem officia aliquam alias incidunt assumenda obcaecati esse, repellendus labore debitis facilis atque doloribus perspiciatis laborum excepturi.
         </p>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 gap-y-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 gap-y-6" data-aos="">
         {latestCollection.map((item) => (
-          <div key={item._id}>
+          <div key={item._id}  >
             <ProductItems
               id={item._id}
               name={item.name}
