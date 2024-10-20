@@ -1,6 +1,7 @@
 import React, { createContext, useState, useMemo, useEffect } from "react";
 import { products } from "../assets/assets";
 import { toast } from "react-toastify";
+import CartItem from "../components/CartItem";
 
 // Create the context
 export const ShopContext = createContext();
@@ -35,25 +36,34 @@ const ShopContextProvider = (props) => {
 
 	// Add to cart function
 	const addToCart = async (itemId, size) => {
-		if (itemId && size) {
-			let cartItemCopy = structuredClone(cartItem);
+    if (itemId && size) {
+        let cartItemCopy = structuredClone(cartItem);
 
-			if (cartItemCopy[itemId]) {
-				if (cartItemCopy[itemId][size]) {
-					cartItemCopy[itemId][size] += 1;
-				} else {
-					cartItemCopy[itemId][size] = 1;
-				}
-			} else {
-				cartItemCopy[itemId] = { [size]: 1 };
-			}
+        if (cartItemCopy[itemId]) {
+            if (cartItemCopy[itemId][size]) {
+                cartItemCopy[itemId][size] += 1;
+            } else {
+                cartItemCopy[itemId][size] = 1;
+            }
+        } else {
+            cartItemCopy[itemId] = { [size]: 1 };
+        }
 
-			setCartItems(cartItemCopy);
-		} else {
-			toast.error("Select Product size");
-			return;
-		}
-	};
+        // Assuming you want to log the itemId, not a "name" property
+        console.log(`Added item: ${itemId} with size ${size}`);
+        
+        // Update the cart state
+        setCartItems(cartItemCopy);
+
+        // Show a success toast instead of error
+        toast.success("Item added to cart", { autoClose: 600 });
+    } else {
+        // Show error if size isn't selected
+        toast.error("Select Product size", { autoClose: 400 });
+        return;
+    }
+};
+
 
 	// Function to calculate total item count in the cart
 	const fetchItemCount = () => {

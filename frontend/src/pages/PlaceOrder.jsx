@@ -89,7 +89,7 @@ function PlaceOrder() {
             
             
 					<div className="w-full  right-0  h-12 flex justify-end items-center mt-8 ">
-						<button   className="2/5 sm:w-1/2 bg-gray-800 hover:bg-gray-900 h-full text-white text-center  text-xs sm:text-sm cursor-pointer flex items-center justify-center px-4 py-2 uppercase" >
+						<button   className="2/5 sm:w-1/2 bg-gray-800 hover:bg-gray-900 h-full text-white text-center  text-xs sm:text-sm cursor-pointer flex items-center justify-center px-12 py-2 uppercase" >
             Place Order
             </button>
 

@@ -14,17 +14,17 @@ import Footer from "./components/Footer";
 import SearchBar from "./components/SearchBar";
 import { useContext, useEffect } from "react";
 import { ShopContext } from "./context/ShopContext";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import AOS from "aos";
 
 function App() {
 	const { search, setSearch, showSearch, setShowSearch, visible } =
 		useContext(ShopContext);
-	
-		useEffect(() => {
-			AOS.init({ duration: 2000 });
-	  }, []);
+
+	useEffect(() => {
+		AOS.init({ duration: 2000 });
+	}, []);
 	return (
 		<>
 			<ToastContainer />

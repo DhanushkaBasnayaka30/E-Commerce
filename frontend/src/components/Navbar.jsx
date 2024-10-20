@@ -41,7 +41,7 @@ function Navbar() {
 		<>
 			<div className="sm:left-[5%] mx-auto flex justify-between py-5 font-medium sm:w-[90%] w-full  fixed z-50  bg-white top-0 flex-col px-2">
 				<div className=" flex bg-white justify-between ">
-					<div className="">
+					<div className="animate-bounce animate-infinite animate-ease-in-out animate-normal" >
 						{/* brandlogo */}
 						<img src={assets.logo} alt="" className="w-36" />
 					</div>

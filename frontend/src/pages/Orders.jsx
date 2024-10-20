@@ -2,7 +2,7 @@ import React from 'react'
 
 function Orders() {
   return (
-    <div>
+    <div className='px-2'>
       
     </div>
   )

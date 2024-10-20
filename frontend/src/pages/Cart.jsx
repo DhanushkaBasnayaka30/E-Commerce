@@ -9,12 +9,12 @@ function Cart() {
 	
 	return (
 		<>
-			<div className="h-auto w-full pt-20 ">
+			<div className="h-auto w-full pt-20 px-2">
 				<div className="w-full text-left ml-4 text-2xl mt-4">
 					<Title text1={"YOUR"} text2={"CART"} className="" />
 				</div>
 				{/* carts */}
-				<div className=" sm:mt-4 ">
+				<div className=" sm:mt-4 mt-8">
 					<CartItem />
 				</div>
 				{/* -------------------------- */}
@@ -24,7 +24,7 @@ function Cart() {
 						{/* heading */}
 						<Bill/>
 						<Link to="/place-order" className="w-full">
-					<div className="w-full  right-0  h-12 flex justify-end items-center mt-8 ">
+					<div className="w-full  right-0  h-12 flex justify-end items-center mt-8 px-2 sm:px-0 ">
 						<div className="2/5 sm:w-1/2 bg-gray-800 hover:bg-gray-900 h-full text-white text-center  text-xs sm:text-sm cursor-pointer flex items-center justify-center px-4 py-2">
 							PROCEED TO CHECKOUT
 						</div>

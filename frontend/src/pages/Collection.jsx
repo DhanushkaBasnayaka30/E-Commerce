@@ -84,7 +84,7 @@ function Collection() {
 	}, [sortType]);
 	return (
 		<div
-			className="flex flex-col sm:flex-row gap-1 sm:gap-10 border-1 transition-all duration-500"
+			className="flex flex-col sm:flex-row gap-1 sm:gap-10 border-1 transition-all duration-500  animate-fade-down animate-once animate-duration-1000 animate-delay-100 animate-ease-in-out animate-normal"
 			style={{
 				paddingTop: showSearch ? "12rem" : "6rem",
 				paddingBottom: showSearch ? "12rem" : "6rem",
