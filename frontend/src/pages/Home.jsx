@@ -17,14 +17,14 @@ function Home() {
 			</div>
 			<div ref={visionMissionRef}
 				className={`${
-					visionMissionInView ? "animate-fade-up animate-ease-in" : ""
+					visionMissionInView ? "" : ""
 				}`}>
 				<LatestCollection />
 			</div>
 			<div
 				ref={visionMissionRef}
 				className={`${
-					visionMissionInView ? "animate-fade-up animate-ease-in" : ""
+					visionMissionInView ? "animate-fade-up animate-ease" : ""
 				}`}>
 				<BestSeller />
 			</div>

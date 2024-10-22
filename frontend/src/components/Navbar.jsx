@@ -81,12 +81,15 @@ function Navbar() {
 								alt=""
 							/>
 							<div className="group-hover:block hidden absolute dropdown-menu left-[-75px] m-auto pt-4">
-								<div className="flex flex-col gap-2 w-36 px-5 bg-gray-200 font-semibold text-gray-900 rounded pb-2">
+								<div className="flex flex-col gap-y-4 w-36 px-5 bg-gray-200 font-semibold text-gray-900 rounded pb-2">
 									<p className="cursor-pointer hover:text-black font-semibold">
 										My Profile
 									</p>
 									<p className="cursor-pointer hover:text-black font-semibold">
 										Orders
+									</p>
+									<p className="cursor-pointer hover:text-black font-semibold">
+										Admin
 									</p>
 									<p className="cursor-pointer hover:text-black font-semibold">
 										Logout
