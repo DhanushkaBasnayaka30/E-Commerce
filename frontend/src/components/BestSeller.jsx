@@ -3,14 +3,29 @@ import { ShopContext } from '../context/ShopContext'
 import { products } from '../assets/assets';
 import Title from './Title';
 import ProductItems from './ProductItems';
+import axios from 'axios';
 
 function BestSeller() {
   const {products} =useContext(ShopContext);
 const [bestSeller,setbestSeller] = useState([])
-useEffect(()=>{
-  const BestSeller= products.filter((item)=>(item.bestseller))
-  setbestSeller(BestSeller.slice(0,5))
-},[])
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("http://localhost:8090/api/best-seller");
+      if (response && response.data) {
+        setbestSeller(response.data.result);
+        // setProductItems(response.data.result);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  fetchData();
+}, []);
+
+
+
   return (
     <div className='my-10'>
       <div className='text-center text-3xl py-8 flex flex-col items-center justify-center sm:mt-16' >

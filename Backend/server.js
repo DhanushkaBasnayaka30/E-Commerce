@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import ItemRoute from "./routes/ItemRoutes.js";
+import CartRoute from "./routes/CartRoutes.js";
 
 const app = express();
 app.use(cors());
@@ -12,7 +13,8 @@ dotenv.config();
 
 const PORT = process.env.PORT || 8091;
 const mongoURL = process.env.MONGO_URI;
-
+console.log("Environment Variables:", process.env.MONGO_URI);
+console.log(PORT);
 mongoose.connect(mongoURL)
   .then(() => {
     console.log("Connection Successful");
@@ -24,4 +26,6 @@ mongoose.connect(mongoURL)
     console.log("Error connecting to MongoDB", err);
   });
 
-app.use("/api", ItemRoute);  // Make sure 'route' is defined elsewhere
+
+app.use("/api", ItemRoute); 
+app.use("/api/cart/", CartRoute);

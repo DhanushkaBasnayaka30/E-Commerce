@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Title from "../components/Title";
 import { assets } from "../assets/assets";
 import NewsLatter from "../components/NewsLatter";
@@ -10,6 +10,9 @@ function About() {
 		threshold: 0.1, // Trigger when 10% of the element is in the viewport
 	});
 
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, []);
 	return (
 		<div  ref={visionMissionRef}
     className={` w-full h-auto  mt-8 sm:mt-20  p-1${

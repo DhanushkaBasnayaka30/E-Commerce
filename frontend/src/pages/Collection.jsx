@@ -1,27 +1,53 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
-import { assets } from "../assets/assets";
 import Title from "../components/Title";
 import ProductItems from "../components/ProductItems";
+import axios from "axios";
 
 function Collection() {
-	const { products } = useContext(ShopContext);
+	// const { products } = useContext(ShopContext);
+	const [products, setProducts] = useState([]);
 	const [showFilter, setShowFilter] = useState(false);
 	const [productsItems, setProductItems] = useState([]);
 	const [filterproductsItems, setFilterProductItems] = useState([]);
 	const [category, setCategory] = useState([]);
 	const [subCategory, setSubcategory] = useState([]);
 	const [sortType, setSortType] = useState("relevent");
-	const { search, setSearch, showSearch, setShowSearch } =
+	const { search, showSearch } =
 		useContext(ShopContext);
+
+	// ===================================
+	// console.log(products[0].image[0]);
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const response = await axios.get("http://localhost:8090/api/get-items");
+				if (response && response.data) {
+					setProducts(response.data.result);
+					// setProductItems(response.data.result);
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		};
+		fetchData();
+	}, []);
+
+
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, []);
 
 	useEffect(() => {
-		setProductItems(products);
+		const fetchProductItems =  () => {
+			 setProductItems(products);
+			 setFilterProductItems(products);
+		};
+		
+		fetchProductItems();
 	}, [products]);
+	
 
 	const toggleCategory = (e) => {
 		if (category.includes(e.target.value)) {
@@ -98,7 +124,6 @@ function Collection() {
 						className="my-2 text-xl flex items-center cursor-pointer gap-2 "
 						onClick={() => setShowFilter(!showFilter)}>
 						FILTERS
-						
 					</p>
 
 					{/* Categories Filter */}
@@ -159,7 +184,7 @@ function Collection() {
 					<div
 						className={`py-3 my-5 ${
 							showFilter ? "" : "hidden sm:flex flex-col"
-						}`} >
+						}`}>
 						<div className="flex gap-y-3 flex-col text-sm font-light text-gray-900">
 							<div className="flex justify-between mb-4 text-base sm:text-2xl">
 								<select
@@ -179,14 +204,18 @@ function Collection() {
 			<div
 				className={`flex flex-col sm:flex-row gap-1 sm:gap-10 border-1 transition-all duration-500 animate-fade-down animate-once animate-duration-1000 animate-delay-100 animate-ease-in-out animate-normal ${
 					showSearch ? "pt-48 pb-48" : "pt-12 pb-24 "
-				} sm:pt-24 sm:pb-8`} style={{
+				} sm:pt-24 sm:pb-8`}
+				style={{
 					paddingTop: showSearch ? "4rem" : "0rem",
 					paddingBottom: showSearch ? "6rem" : "0rem",
 				}}>
 				{/* Filter Option */}
 
 				{/* RightSide */}
-				<div className= {`flex-1 sm:ml-64 ${showSearch?"mt-8 sm:mt-32":"sm:mt-20 mt-12"}`}>
+				<div
+					className={`flex-1 sm:ml-64 ${
+						showSearch ? "mt-8 sm:mt-32" : "sm:mt-20 mt-12"
+					}`}>
 					<div className="flex justify-center sm:justify-start mb-4 text-2xl sm:text-2xl">
 						<Title text1={"ALL"} text2={"COLLECTION"} />
 					</div>
@@ -194,10 +223,10 @@ function Collection() {
 
 					<div className="w-auto top-0 sm:hidden">
 						<div className="min-w-60 sm:fixed top-2 z-10 h-auto  ">
-							<div
-								className="border flex w-full justify-start gap-x-1items-center px-2 py-1  cursor-pointer "
-								>
-								<div className="flex items-center border px-4 rounded border-gray-700 gap-x-2 justify-center " onClick={() => setShowFilter(!showFilter)}>
+							<div className="border flex w-full justify-start gap-x-1items-center px-2 py-1  cursor-pointer ">
+								<div
+									className="flex items-center border px-4 rounded border-gray-700 gap-x-2 justify-center "
+									onClick={() => setShowFilter(!showFilter)}>
 									<p className="my-2 text-base flex items-center gap-2 ">
 										FILTERS
 									</p>
@@ -208,7 +237,10 @@ function Collection() {
 									/>
 								</div>
 
-								<div className={`  w-1/2 flex items-center justify-center ${showFilter ? "" : ""}`}>
+								<div
+									className={`  w-1/2 flex items-center justify-center ${
+										showFilter ? "" : ""
+									}`}>
 									<div className="flex gap-y-3 flex-col text-sm font-light text-gray-900">
 										<div className="flex justify-between  text-base sm:text-2xl">
 											<select
@@ -235,7 +267,7 @@ function Collection() {
 								<p className="mb-3 text-sm font-medium sm:text-base text-start">
 									CATEGORIES
 								</p>
-								
+
 								<div className="flex gap-y-3 flex-col text-sm font-light text-gray-700">
 									{[...new Set(productsItems.map((item) => item.category))].map(
 										(category, index) => (
@@ -283,23 +315,22 @@ function Collection() {
 									))}
 								</div>
 							</div>
-
-							
 						</div>
 					</div>
 
 					{/* Map Product */}
 					<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-4 p-2 py-4 border-gray-400">
-						{filterproductsItems.map((item, index) => (
-							<ProductItems
-								key={index}
-								name={item.name}
-								price={item.price}
-								image={item.image}
-								id={item._id}
-							/>
-						))}
-					</div>
+  {filterproductsItems.map((item, index) => (
+    <ProductItems
+      key={index}
+      name={item.name}
+      price={item.price}
+      image={item.image}
+      id={item._id}
+    />
+  ))}
+</div>
+
 				</div>
 			</div>
 		</>

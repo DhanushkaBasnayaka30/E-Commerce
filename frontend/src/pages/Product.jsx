@@ -1,12 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import  {useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { ShopContext } from "../context/ShopContext";
-import { assets } from "../assets/assets";
+
+import { assets, productImages } from "../assets/assets";
 import Title from "../components/Title";
-import ProductItems from "../components/ProductItems";
 import RleatedProduct from "../components/RleatedProduct";
 import { FaRegCommentAlt } from "react-icons/fa";
-import { IoMdSend } from "react-icons/io";
+import axios from "axios";
 
 function Product() {
 	const previousComments = [
@@ -18,12 +17,11 @@ function Product() {
 	];
 
 	const { id } = useParams(); // productID is a string
-	const { products, cartItem, addToCart } = useContext(ShopContext);
+	const mobileno ="0726837104";
 	const [productData, setProductData] = useState(null); // Initialize as null
 	const [image, setImage] = useState("");
 	const [selectedSize, setSelectedSize] = useState(null);
 	const [isReveiw, setReivew] = useState(false);
-
 	useEffect(() => {
 		// Wait 200 milliseconds before scrolling to the top for smooth transition
 		const timer = setTimeout(() => {
@@ -38,15 +36,46 @@ function Product() {
 	}, [id]);
 
 	useEffect(() => {
-		if (products && products.length > 0) {
-			const product = products.find((item) => item._id === id);
-			if (product) {
-				setProductData(product);
-				setImage(product.image[0]);
-			}
-		}
-	}, [id, products]);
+		const fetchData = async () => {
+			try {
+				const response = await axios.post(
+					`http://localhost:8090/api/get-item/${id}`
+				);
 
+				if (response) {
+					setProductData(response.data.result);
+					const image = response.data.result.image[0];
+					setImage(productImages[image]);
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		};
+
+		fetchData();
+	}, [id]);
+
+	const addToCart=async(id,size,quantity)=>{
+		console.log(id,size);
+		try {
+			const response = await axios.post(`http://localhost:8090/api/cart/add/${mobileno}`,{id,size,quantity});
+			if(response){
+				console.log(response.data);
+			}
+		}catch (error) {
+			if (error.response) {
+					
+					console.log('Error Response:', error.response.data);
+					console.log('Error Status:', error.response.status);
+			} else if (error.request) {
+					
+					console.log('Error Request:', error.request);
+			} else {
+					
+					console.log('Error Message:', error.message);
+			}
+	}
+	}
 	return productData ? (
 		<div className="border-t pt-10 transition-opacity ease-in duration-500 opacity-100 sm:pt-32 p-2 animate-fade-down animate-once animate-duration-1000 animate-delay-100 animate-ease-in-out animate-normal">
 			{/* product Data */}
@@ -58,9 +87,9 @@ function Product() {
 								<img
 									key={index}
 									className="lg:w-40 lg:h-40 xl:w-48 xl:h-48 w-32 h-32 object-cover bg-center sm:mb-3 flex flex-shrink-0 cursor-pointer"
-									src={item}
+									src={productImages[item]}
 									alt=""
-									onClick={() => setImage(item)} // Allows clicking to switch the main image
+									onClick={() => setImage(productImages[item])} // Allows clicking to switch the main image
 								/>
 							))}
 						</div>
@@ -115,9 +144,9 @@ function Product() {
 					{/* Add Cart */}
 					<div className="flex w-full mt-8">
 						<p
-							className="bg-gray-800 hover:bg-gray-900 cursor-pointer w-32 text-white text-sm py-3"
+							className="bg-gray-800 hover:bg-gray-900 cursor-pointer w-32 text-white text-sm py-3 text-center"
 							onClick={() => {
-								addToCart(productData._id, selectedSize);
+								addToCart(productData._id, selectedSize,1);
 							}}>
 							ADD TO CART
 						</p>
@@ -188,15 +217,25 @@ function Product() {
 									<FaRegCommentAlt />
 								</p>
 
-								<p className="text-gray-900 text-left text-xs sm:text-sm">{item}</p>
+								<p className="text-gray-900 text-left text-xs sm:text-sm">
+									{item}
+								</p>
 							</div>
 						))}
 					</div>
 
 					<div className="w-full sm:w-[45%] h-20  flex items-center ml-4 mt-8	px-4">
 						<form action="" className="flex w-full gap-x-4">
-							<input type="text" placeholder="ADD YOU COMMENT" className=" text-xs sm:text-sm outline-none w-full  h-10 sm:h-12 bg-white border border-gray-800 pl-4 rounded-md	" />
-							<button><p className="bg-gray-800 px-12 text-xs sm:text-sm py-3 text-white sm:text-base rounded-md hover:bg-gray-900">send</p></button>
+							<input
+								type="text"
+								placeholder="ADD YOU COMMENT"
+								className=" text-xs sm:text-sm outline-none w-full  h-10 sm:h-12 bg-white border border-gray-800 pl-4 rounded-md	"
+							/>
+							<button>
+								<p className="bg-gray-800 px-12 text-xs  py-3 text-white sm:text-base rounded-md hover:bg-gray-900">
+									send
+								</p>
+							</button>
 						</form>
 					</div>
 				</div>

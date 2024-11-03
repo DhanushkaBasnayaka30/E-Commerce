@@ -7,5 +7,12 @@ export default defineConfig({
 	server: {
 		host: "0.0.0.0",
 		port: 5178,
+		proxy: {
+			'/api': {
+				target: 'http://localhost:8090', // Replace with your backend server URL
+				changeOrigin: true,
+				rewrite: (path) => path.replace(/^\/api/, ''),
+			},
+		},
 	},
 });

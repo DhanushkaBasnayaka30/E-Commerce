@@ -2,20 +2,35 @@ import React, { useContext, useEffect, useState } from 'react';
 import { ShopContext } from '../context/ShopContext';
 import Title from './Title';
 import ProductItems from './ProductItems';
-
+import axios from "axios";
 function LatestCollection() {
   const { products } = useContext(ShopContext);
   const [latestCollection, setLatestCollection] = useState([]);
 
-  useEffect(() => {
-    console.log(products);  // Ensure products is an array
-    if (Array.isArray(products)) {
-      setLatestCollection(products.slice(0, 10));  // Slicing first 3 products
-    } else {
-      console.error("Products is not an array:", products);
-    }
-  }, [products]);
+  // useEffect(() => {
+  //   console.log(products);  // Ensure products is an array
+  //   if (Array.isArray(products)) {
+  //     setLatestCollection(products.slice(0, 10));  // Slicing first 3 products
+  //   } else {
+  //     console.error("Products is not an array:", products);
+  //   }
+  // }, [products]);
 
+
+  useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const response = await axios.get("http://localhost:8090/api/get-items");
+				if (response && response.data) {
+					setLatestCollection(response.data.result.slice(0, 10));
+					// setProductItems(response.data.result);
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		};
+		fetchData();
+	}, []);
   return (
     <div className="my-10">
       <div className="text-center py-8 text-3xl sm:mt-24" data-aos="zoom-in">

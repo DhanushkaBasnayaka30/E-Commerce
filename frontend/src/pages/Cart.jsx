@@ -1,7 +1,6 @@
-import React, { useContext } from "react";
+
 import Title from "../components/Title";
 import CartItem from "../components/CartItem";
-import { ShopContext } from "../context/ShopContext";
 import Bill from "../components/Bill";
 import { Link } from "react-router-dom";
 

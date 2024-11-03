@@ -1,18 +1,35 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { ShopContext } from '../context/ShopContext'
 import ProductItems from './ProductItems';
+import axios from 'axios';
 
 function RleatedProduct({category,subCategory}) {
 
-  const {products}= useContext(ShopContext);
+  // const {products}= useContext(ShopContext);
+  const[products,setProducts] = useState([]);
   const [related,setRelated] = useState([])
+
+  useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const response = await axios.get("http://localhost:8090/api/get-items");
+				if (response && response.data) {
+					setProducts(response.data.result);
+			
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		};
+		fetchData();
+	}, []);
 
   useEffect(()=>{
     if(products.length>0){
       let productCopy = products.slice()
       productCopy = productCopy.filter((item)=>category===item.category);
       productCopy = productCopy.filter((item)=>subCategory===item.subCategory);
-      console.log(productCopy.slice(0,5))
+    
       setRelated(productCopy.slice(0,5))
     }
   },[products])
