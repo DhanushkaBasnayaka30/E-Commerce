@@ -35,7 +35,7 @@ function CartItem() {
 		const fetchCartData = async () => {
 			// Start loading
 			try {
-				const response = await axios.get(
+				const response = await axios.post(
 					`http://localhost:8090/api/cart/get/${mobileno}`
 				);
 				if (response && response.data.result) {

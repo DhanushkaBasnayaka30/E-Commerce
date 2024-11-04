@@ -1,21 +1,79 @@
 import CartModule from "../modules/CartModule.js";
 import ItemModule from "../modules/ItemModule.js";
+import dotenv from "dotenv";
+import { createClient } from "@supabase/supabase-js";
 
+const supabaseUrl = "https://tutjsnlbzyrnobycqicd.supabase.co"; // Ensure this is set
+
+const supabaseAnonKey =
+	"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR1dGpzbmxienlybm9ieWNxaWNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA2NTQwNjcsImV4cCI6MjA0NjIzMDA2N30.rT4dx2XkRpPoRr_bqxKgRkQpaC3xJcQIiNkj0PlZK_E"; // Ensure this is set
+
+console.log(supabaseAnonKey);
+// Check for required environment variables
+
+if (!supabaseUrl || !supabaseAnonKey) {
+	console.error("Error: SUPABASE_URL and SUPABASE_ANON_KEY must be defined.");
+	process.exit(1);
+}
+
+// Create Supabase client
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 export const AddItem = async (req, res) => {
-	console.log(req.body);
 	try {
-		const newItem = new ItemModule(req.body);
-		const { _id } = newItem;
+		const files = req.files; // Get files from the request
+		const itemid = req.body._id; // Get item ID from request body
+		const imageNames = files.map((file) => `${itemid}-${file.originalname}`); // Create image names
 
-		const userExist = await ItemModule.findOne({ _id });
+		// Upload images to Supabase
+		const uploadPromises = files.map(async (file) => {
+			const { data, error } = await supabase.storage
+				.from("itemImage") // Replace with your Supabase bucket name
+				.upload(`item/${itemid}-${file.originalname}`, file.buffer, {
+					contentType: file.mimetype,
+				});
 
-		if (userExist) {
-			return res.status(400).json({ Message: `${_id} Item already exists` });
+			if (error) {
+				console.error("Upload error:", error);
+				throw error; // Handle the upload error
+			}
+
+			return data; // Return uploaded file metadata
+		});
+
+		const uploadedFiles = await Promise.all(uploadPromises); // Wait for all uploads to finish
+
+		if (uploadedFiles) {
+			// Create the new item with uploaded images
+			const newItem = new ItemModule({
+				_id: itemid,
+				name: req.body.name,
+				description: req.body.description,
+				price: req.body.price,
+				image: imageNames,
+				category: req.body.category,
+				subCategory: req.body.subCategory,
+				sizes: req.body.sizes,
+			});
+
+			const userExist = await ItemModule.findOne({ _id: itemid });
+
+			if (userExist) {
+				return res
+					.status(400)
+					.json({ Message: `${itemid} Item already exists` });
+			}
+
+			const savedData = await newItem.save(); // Save the new item to the database
+			console.log("Saved Data:", savedData);
+			res
+				.status(200)
+				.json({ Message: "Item added successfully", item: savedData });
 		}
-		const savedData = await newItem.save();
-		res.status(200).json(savedData);
 	} catch (error) {
-		res.status(500).json({ Message: "error in adding user" });
+		console.error("Error in adding item:", error);
+		res
+			.status(500)
+			.json({ Message: "Error in adding item", error: error.message });
 	}
 };
 
@@ -27,7 +85,7 @@ export const GetItems = async (req, res) => {
 		const item = await ItemModule.find();
 
 		if (item) {
-				// console.log(item);
+			// console.log(item);
 			res.status(200).json({ result: item });
 			// res.send(item);
 		} else {
@@ -62,14 +120,11 @@ export const GetProduct = async (req, res) => {
 	try {
 		const item = await ItemModule.findById(id);
 		if (item) {
-		
 			res.status(200).json({ result: item });
 		} else {
 			res.status(400).json({ message: "Item not found" });
 		}
-	
 	} catch (error) {
 		console.log("Server Error connecting item", error);
 	}
 };
-

@@ -1,5 +1,6 @@
 import CartModule from "../modules/CartModule.js";
 
+
 export const AddCart = async (req, res) => {
 	const mobileno = req.params.id;
 	// console.log(req.body);
@@ -54,6 +55,8 @@ export const AddCart = async (req, res) => {
 		res.status(500).json({ Message: "Error in adding item to cart" });
 	}
 };
+
+
 export const GetCart = async (req, res) => {
 	const mobileno = req.params.id.trim();
 	console.log("Mobileno type:", typeof mobileno); // Should log 'string'

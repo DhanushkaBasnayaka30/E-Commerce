@@ -19,6 +19,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { Player } from "@lottiefiles/react-lottie-player"; // For rendering loaders.json if it's a Lottie animation
 import loaders from "./assets/loaders.json";
+import Dashboard from "./assets/Admin/Dashboard";
 
 function App() {
 	const { showSearch, visible } = useContext(ShopContext);
@@ -62,6 +63,7 @@ function App() {
 					<Route path="/place-order" element={<PlaceOrder />} />
 					<Route path="/collection" element={<Collection />} />
 					<Route path="/product/:id" element={<Product />} />
+					<Route path="/admin" element={<Dashboard />} />
 				</Routes>
 				<Footer />
 			</div>

@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { assets } from "../assets/assets";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import SearchBar from "./SearchBar";
 import { ShopContext } from "../context/ShopContext";
 
@@ -35,7 +35,7 @@ function Navbar() {
 	const { search, setSearch, showSearch, setShowSearch, fetchItemCount ,cartItem,itemCount} =
 		useContext(ShopContext);
 
-		
+		const navigate = useNavigate()
 			
 	return (
 		<>
@@ -88,7 +88,7 @@ function Navbar() {
 									<p className="cursor-pointer hover:text-black font-semibold">
 										Orders
 									</p>
-									<p className="cursor-pointer hover:text-black font-semibold">
+									<p className="cursor-pointer hover:text-black font-semibold" onClick={()=>(navigate("admin"))}>
 										Admin
 									</p>
 									<p className="cursor-pointer hover:text-black font-semibold">

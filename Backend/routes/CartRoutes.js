@@ -6,7 +6,7 @@ const CartRoute = express.Router();
 
 
 CartRoute.post('/add/:id',AddCart)
-CartRoute.get('/get/:id',GetCart)
+CartRoute.post('/get/:id',GetCart)
 
 
 export default CartRoute;
