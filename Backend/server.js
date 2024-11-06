@@ -28,7 +28,7 @@ if (!mongoURL) {
 
 app.use(
   cors({
-    origin: "http://localhost:5178",
+    origin: "*",
   })
 );
 

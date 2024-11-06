@@ -27,7 +27,7 @@ const navDetails = [
 	},
 	
 ];
-
+console.log(navDetails);
 function Navbar() {
 	const [visible, setVisible] = useState(false);
  
@@ -88,7 +88,7 @@ function Navbar() {
 									<p className="cursor-pointer hover:text-black font-semibold">
 										Orders
 									</p>
-									<p className="cursor-pointer hover:text-black font-semibold" onClick={()=>(navigate("admin"))}>
+									<p className="cursor-pointer hover:text-black font-semibold" onClick={()=>(navigate("admin/dashboard"))}>
 										Admin
 									</p>
 									<p className="cursor-pointer hover:text-black font-semibold">

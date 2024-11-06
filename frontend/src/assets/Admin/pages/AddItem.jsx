@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 
-function Dashboard() {
+function AddItem() {
   const [images, setImages] = useState([]);
   const [name, setName] = useState('');
   const [id, setId] = useState('');
@@ -179,4 +179,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default AddItem;

@@ -13,11 +13,11 @@ const supabase = createClient(
 );
 
 createRoot(document.getElementById("root")).render(
-	<BrowserRouter>
+	
 		<SessionContextProvider supabaseClient={supabase}>
 			<ShopContextProvide>
 				<App />
 			</ShopContextProvide>
 		</SessionContextProvider>
-	</BrowserRouter>
+	
 );

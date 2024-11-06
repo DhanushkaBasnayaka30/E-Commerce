@@ -22,6 +22,12 @@
 a.active hr {
   display: block;
 }
+a.active div {
+  
+  background-color: rgb(75, 83, 104);
+color: aliceblue
+  
+}
 
 @layer base {
   /* Apply Poppins globally */
