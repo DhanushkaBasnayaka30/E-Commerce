@@ -1,4 +1,4 @@
-import  {useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { assets, productImages } from "../assets/assets";
@@ -6,7 +6,8 @@ import Title from "../components/Title";
 import RleatedProduct from "../components/RleatedProduct";
 import { FaRegCommentAlt } from "react-icons/fa";
 import axios from "axios";
-
+import loadingCom from "../assets/square-loader.json";
+import { Player } from "@lottiefiles/react-lottie-player";
 function Product() {
 	const previousComments = [
 		"This T-shirt is incredibly comfortable! The pure cotton material feels soft against the skin, making it perfect for all-day wear.",
@@ -17,7 +18,7 @@ function Product() {
 	];
 
 	const { id } = useParams(); // productID is a string
-	const mobileno ="0726837104";
+	const mobileno = "0726837104";
 	const [productData, setProductData] = useState(null); // Initialize as null
 	const [image, setImage] = useState("");
 	const [selectedSize, setSelectedSize] = useState(null);
@@ -43,7 +44,9 @@ function Product() {
 				);
 
 				if (response) {
-					setProductData(response.data.result);
+					setTimeout(() => {
+						setProductData(response.data.result);
+					}, 1000);
 					const image = response.data.result.image[0];
 					setImage(productImages[image]);
 				}
@@ -55,27 +58,27 @@ function Product() {
 		fetchData();
 	}, [id]);
 
-	const addToCart=async(id,size,quantity)=>{
-		console.log(id,size);
+	const addToCart = async (id, size, quantity) => {
+		console.log(id, size);
 		try {
-			const response = await axios.post(`http://localhost:8090/api/cart/add/${mobileno}`,{id,size,quantity});
-			if(response){
+			const response = await axios.post(
+				`http://localhost:8090/api/cart/add/${mobileno}`,
+				{ id, size, quantity }
+			);
+			if (response) {
 				console.log(response.data);
 			}
-		}catch (error) {
+		} catch (error) {
 			if (error.response) {
-					
-					console.log('Error Response:', error.response.data);
-					console.log('Error Status:', error.response.status);
+				console.log("Error Response:", error.response.data);
+				console.log("Error Status:", error.response.status);
 			} else if (error.request) {
-					
-					console.log('Error Request:', error.request);
+				console.log("Error Request:", error.request);
 			} else {
-					
-					console.log('Error Message:', error.message);
+				console.log("Error Message:", error.message);
 			}
-	}
-	}
+		}
+	};
 	return productData ? (
 		<div className="border-t pt-10 transition-opacity ease-in duration-500 opacity-100 sm:pt-32 p-2 animate-fade-down animate-once animate-duration-1000 animate-delay-100 animate-ease-in-out animate-normal">
 			{/* product Data */}
@@ -146,7 +149,7 @@ function Product() {
 						<p
 							className="bg-gray-800 hover:bg-gray-900 cursor-pointer w-32 text-white text-sm py-3 text-center"
 							onClick={() => {
-								addToCart(productData._id, selectedSize,1);
+								addToCart(productData._id, selectedSize, 1);
 							}}>
 							ADD TO CART
 						</p>
@@ -255,7 +258,14 @@ function Product() {
 			</div>
 		</div>
 	) : (
-		<div className="opacity-100">Loading...</div>
+		<div className="flex items-center justify-center h-screen">
+			<Player
+				autoplay
+				loop
+				src={loadingCom}
+				style={{ height: "300px", width: "300px" }}
+			/>
+		</div>
 	);
 }
 

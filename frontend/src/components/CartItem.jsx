@@ -1,145 +1,135 @@
-import  { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
 import { ImBin } from "react-icons/im";
 import { IoMdAdd, IoMdRemove } from "react-icons/io";
 import axios from "axios";
 import { productImages } from "../assets/assets";
-import { Loader, Image, Segment } from "semantic-ui-react";
+import Loader from "../assets/square-loader.json";
+import { Player } from "@lottiefiles/react-lottie-player";
 
 function CartItem() {
-	const { currency, updateQuantity } = useContext(ShopContext);
-	const [cartItems, setCartItems] = useState([]);
-	const [products, setProducts] = useState([]);
-	const [isLoading, setLoading] = useState(false); // Initialize as true
-	const mobileno = "0726837104";
+  // Destructure context values
+  const { currency, updateQuantity } = useContext(ShopContext);
+  const [cartItems, setCartItems] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [isLoading, setLoading] = useState(false);
+  const mobileno = "0726837104";
 
-	useEffect(() => {
-		window.scrollTo(0, 0);
-	}, []);
+  // Scroll to the top on component mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
-	useEffect(() => {
-		const fetchProducts = async () => {
-			try {
-				const response = await axios.get("http://localhost:8090/api/get-items");
-				if (response && response.data) {
-					setProducts(response.data.result);
-				}
-			} catch (error) {
-				console.error("Error fetching products:", error);
-			}
-		};
-		fetchProducts();
-	}, []);
+  // Fetch products and cart items
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        // Fetch products
+        const productResponse = await axios.get("http://localhost:8090/api/get-items");
+        const fetchedProducts = productResponse?.data?.result || [];
 
-	useEffect(() => {
-		const fetchCartData = async () => {
-			// Start loading
-			try {
-				const response = await axios.post(
-					`http://localhost:8090/api/cart/get/${mobileno}`
-				);
-				if (response && response.data.result) {
-					setCartItems(response.data.result.items);
-					setTimeout(() => {
-						setLoading(true);
-					}, 500);
-				} else {
-					setCartItems([]); // Handle case where result is empty or undefined
-				}
-			} catch (error) {
-				console.error("Error fetching cart data:", error);
-				setCartItems([]); // Reset on error
-			} finally {
-				// End loading
-			}
-		};
+        setProducts(fetchedProducts);
 
-		if (products.length > 0) {
-			fetchCartData();
-		}
-	}, [mobileno, products]);
+        // Fetch cart items only if products are available
+        if (fetchedProducts.length > 0) {
+          const cartResponse = await axios.post(
+            `http://localhost:8090/api/cart/get/${mobileno}`
+          );
+          const cartData = cartResponse?.data?.result?.items || [];
+          setCartItems(cartData);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setCartItems([]); // Reset on error
+      } finally {
+        setLoading(false);
+      }
+    };
 
-	
+    fetchData();
+  }, [mobileno]);
 
-	return (
-		<div className="w-full h-auto sm:px-4 pb-4">
-			{cartItems.map((item) => {
-				const productItem = products.find(
-					(productItem) => productItem._id === item.itemId
-				);
-				if (!productItem) return null; // Skip if no product found
+  // Rendering the cart items
+  return (
+    <div>
+      {isLoading ? (
+        // Show a loading skeleton if data is still loading
+        <div className="flex items-center justify-center h-screen">
+          <Player autoplay loop src={Loader} style={{ height: "300px", width: "300px" }} />
+        </div>
+      ) : cartItems.length > 0 ? (
+        cartItems.map((item) => {
+          // Find the corresponding product details
+          const productItem = products.find(
+            (productItem) => productItem._id === item.itemId
+          );
+          if (!productItem) return null; // Skip if no product found
 
-				return item.sizes.map((product, index) =>
-					isLoading ? (
-						<div
-							key={item._id} // Use a unique identifier for the key
-							className="w-full h-auto group flex mb-4 border border-gray-100 hover:bg-gray-200 sm:scale-100 text-sm sm:text-base shadow-md shadow-gray-420">
-							<div className="sm:w-3/4 w-5/6 flex">
-								{/* Product Image */}
-								<div className="w-1/7 h-36 bg-gray-600">
-									<img
-										src={productImages[productItem.image[0]]} // Access image via item
-										alt={productItem.name} // Use item's name for alt text
-										className="h-full w-full object-cover"
-									/>
-								</div>
+          return item.sizes.map((product, index) => (
+            <div key={`${item._id}-${product.size}-${index}`} className="w-full h-auto sm:px-4 pb-4">
+              <div className="w-full h-auto group flex mb-4 border border-gray-100 hover:bg-gray-200 sm:scale-100 text-sm sm:text-base shadow-md shadow-gray-420">
+                {/* Product Image */}
+                <div className="sm:w-3/4 w-5/6 flex">
+                  <div className="w-1/7 h-36 bg-gray-600">
+                    <img
+                      src={productItem.image[0]}
+                      alt={productItem.name}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
 
-								{/* Product Details */}
-								<div className="w-5/7 h-full sm:p-4 flex flex-col items-start gap-y-2 ml-4">
-									<p className="font-bold w-full text-left">
-										{productItem.name} {/* Use item's name */}
-									</p>
-									<div className="text-sm text-gray-700 flex items-center justify-start gap-x-6">
-										<p className="text-base font-semibold">
-											{currency}
-											{product.price} {/* Use item's price */}
-										</p>
-										<p className="px-2 py-2 bg-gray-200 border">
-											{product.size}
-										</p>
-										{/* Use item's size */}
-									</div>
-									<div className="w-full h-auto flex gap-x-3 mt-2">
-										<button
-											className="px-1 py-1 border border-black rounded-sm"
-											onClick={() =>
-												updateQuantity(item._id, item.quantity - 1, item.size)
-											}>
-											<IoMdRemove className="text-xs" />
-										</button>
-										<p>{product.quantity}</p>
-										<button
-											className="px-1 py-1 border border-black rounded-sm"
-											onClick={() =>
-												updateQuantity(item._id, item.quantity + 1, item.size)
-											}>
-											<IoMdAdd className="text-xs" />
-										</button>
-									</div>
-								</div>
-							</div>
+                  {/* Product Details */}
+                  <div className="w-5/7 h-full sm:p-4 flex flex-col items-start gap-y-2 ml-4">
+                    <p className="font-bold w-full text-left">{productItem.name}</p>
+                    <div className="text-sm text-gray-700 flex items-center gap-x-6">
+                      <p className="text-base font-semibold">
+                        {currency}
+                        {product.price}
+                      </p>
+                      <p className="px-2 py-2 bg-gray-200 border">{product.size}</p>
+                    </div>
 
-							{/* Bin Icon for Remove */}
-							<div className="sm:w-1/4 w-1/6 flex items-center justify-center">
-								<ImBin
-									className="w-5 h-5 text-black cursor-pointer hover:scale-110"
-									onClick={() => updateQuantity(item._id, 0, item.size)}
-								/>
-							</div>
-						</div>
-					) : (
-						<div key={index} className="flex flex-col gap-y-2">
-							<Segment>
-								<Loader active />
+                    {/* Quantity Controls */}
+                    <div className="w-full h-auto flex gap-x-3 mt-2">
+                      <button
+                        className="px-1 py-1 border border-black rounded-sm"
+                        onClick={() =>
+                          updateQuantity(item._id, product.quantity - 1, product.size)
+                        }
+                        disabled={product.quantity === 1}
+                      >
+                        <IoMdRemove className="text-xs" />
+                      </button>
+                      <p>{product.quantity}</p>
+                      <button
+                        className="px-1 py-1 border border-black rounded-sm"
+                        onClick={() =>
+                          updateQuantity(item._id, product.quantity + 1, product.size)
+                        }
+                      >
+                        <IoMdAdd className="text-xs" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
 
-								<Image src="https://react.semantic-ui.com/images/wireframe/short-paragraph.png" />
-							</Segment>
-						</div>
-					)
-				);
-			})}
-		</div>
-	);
+                {/* Bin Icon for Remove */}
+                <div className="sm:w-1/4 w-1/6 flex items-center justify-center">
+                  <ImBin
+                    className="w-5 h-5 text-black cursor-pointer hover:scale-110"
+                    onClick={() => updateQuantity(item._id, 0, product.size)}
+                  />
+                </div>
+              </div>
+            </div>
+          ));
+        })
+      ) : (
+        <div className="text-center py-10 text-gray-600">Your cart is empty</div>
+      )}
+    </div>
+  );
 }
 
 export default CartItem;

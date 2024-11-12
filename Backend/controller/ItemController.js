@@ -2,6 +2,7 @@ import CartModule from "../modules/CartModule.js";
 import ItemModule from "../modules/ItemModule.js";
 import dotenv from "dotenv";
 import { createClient } from "@supabase/supabase-js";
+import { getImagesWithUrls } from "../superbaseConfig/Supabase_GetImage.js";
 
 const supabaseUrl = "https://tutjsnlbzyrnobycqicd.supabase.co"; // Ensure this is set
 
@@ -78,18 +79,43 @@ export const AddItem = async (req, res) => {
 };
 
 export const GetItems = async (req, res) => {
-	console.log("hiiii");
 	try {
-		// Retrieve the item by its ID from the database
-		const itemId = "aaaah"; // Replace "aaaab" with the actual item ID if needed
-		const item = await ItemModule.find();
+		const items = await ItemModule.find();
+		console.log(items);
+		if (items && items.length > 0) {
+			let folderPath = "item";
+			const publicUrls = await getImagesWithUrls("itemImage", folderPath);
 
-		if (item) {
-			// console.log(item);
-			res.status(200).json({ result: item });
-			// res.send(item);
+			// Map items to include their respective image URLs
+			const itemsWithImages = items.map((item) => {
+				const imageUrls = item.image.map((imgPath) => {
+					// Extract the image name
+					const imagename = imgPath.split("/").pop();
+					// Find the matching public URL
+					const matchingUrl = publicUrls.find((img) =>
+						img.url.includes(imagename)
+					);
+					return matchingUrl ? matchingUrl.url : null;
+				});
+
+				return {
+					_id: item._id,
+					name: item.name,
+					description: item.description,
+					price: item.price,
+					image: imageUrls.filter((url) => url !== null), // Include only non-null URLs
+					category: item.category,
+					subCategory: item.subCategory,
+					review: item.review,
+					sizes: item.sizes,
+					data: item.data,
+					bestseller: item.bestseller,
+				};
+			});
+			console.log(itemsWithImages);
+			res.status(200).json({ result: itemsWithImages });
 		} else {
-			res.status(404).json({ Message: "Item not found" });
+			res.status(404).json({ Message: "No items found" });
 		}
 	} catch (error) {
 		console.error("Error retrieving items:", error);
@@ -101,9 +127,43 @@ export const BestSeller = async (req, res) => {
 	console.log("hiiii");
 	try {
 		const bestSellers = await ItemModule.find({ bestseller: true });
+
 		console.log(bestSellers.length);
 		if (bestSellers) {
-			res.status(200).json({ result: bestSellers });
+			if (bestSellers && bestSellers.length > 0) {
+				// Fetch all public URLs once
+				let folderPath = "item";
+				const publicUrls = await getImagesWithUrls("itemImage", folderPath);
+
+				const bestSellerswith_image = bestSellers.map((item) => {
+					const imageUrls = item.image.map((imgPath) => {
+						const imagename = imgPath.split("/").pop();
+
+						const matchingUrl = publicUrls.find((img) =>
+							img.url.includes(imagename)
+						);
+						return matchingUrl ? matchingUrl.url : null;
+					});
+
+					return {
+						_id: item._id,
+						name: item.name,
+						description: item.description,
+						price: item.price,
+						image: imageUrls.filter((url) => url !== null), // Include only non-null URLs
+						category: item.category,
+						subCategory: item.subCategory,
+						review: item.review,
+						sizes: item.sizes,
+						data: item.data,
+						bestseller: item.bestseller,
+					};
+				});
+
+				res.status(200).json({ result: bestSellerswith_image });
+			}
+
+			// res.status(200).json({ result: bestSellers });
 			// res.send(item);
 		} else {
 			res.status(404).json({ Message: "Item not found" });

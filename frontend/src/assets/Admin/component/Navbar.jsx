@@ -2,6 +2,7 @@ import React from "react";
 import { FaHome } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 import { AiFillProduct } from "react-icons/ai";
+import { MdLogout } from "react-icons/md";
 
 const navDetails = [
 	{
@@ -16,11 +17,13 @@ const navDetails = [
 		url: "/admin/products",
 		icon: <AiFillProduct />,
 	},
+	
 ];
 
 function Navbar() {
 	return (
 		<div className="h-[900px] w-20 hover:w-40 bg-gray-300 fixed transition-width duration-300 ease-in-out top-20 group z-10">
+			
 			{navDetails.map((item) => (
 				<NavLink
 					to={item.url}

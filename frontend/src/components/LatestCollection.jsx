@@ -7,21 +7,13 @@ function LatestCollection() {
   const { products } = useContext(ShopContext);
   const [latestCollection, setLatestCollection] = useState([]);
 
-  // useEffect(() => {
-  //   console.log(products);  // Ensure products is an array
-  //   if (Array.isArray(products)) {
-  //     setLatestCollection(products.slice(0, 10));  // Slicing first 3 products
-  //   } else {
-  //     console.error("Products is not an array:", products);
-  //   }
-  // }, [products]);
-
 
   useEffect(() => {
 		const fetchData = async () => {
 			try {
 				const response = await axios.get("http://localhost:8090/api/get-items");
 				if (response && response.data) {
+          console.log(response.data.result.slice(0, 10));
 					setLatestCollection(response.data.result.slice(0, 10));
 					// setProductItems(response.data.result);
 				}

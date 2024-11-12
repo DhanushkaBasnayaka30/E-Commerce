@@ -1,5 +1,5 @@
 import CartModule from "../modules/CartModule.js";
-
+import ItemModule from "../modules/ItemModule.js";
 
 export const AddCart = async (req, res) => {
 	const mobileno = req.params.id;
@@ -8,16 +8,8 @@ export const AddCart = async (req, res) => {
 		size: req.body.size,
 		quantity: req.body.quantity,
 	};
-	// const size = {
-	// 	size: req.body.items[0].sizes[0].size,
-	// 	quantity: req.body.items[0].sizes[0].quantity,
-	// };
+
 	const cartItem = { itemId: req.body.id, sizes: size };
-	// const cartItem = { itemId: req.body.items[0].itemId, sizes: size };
-	// const newItem = {
-	// 	mobileno: mobileno,
-	// 	items: cartItem,
-	// };
 
 	try {
 		// Check if a cart already exists for this mobile number
@@ -47,7 +39,7 @@ export const AddCart = async (req, res) => {
 			});
 
 			const savedData = await newCart.save();
-      console.log("newCart",newCart);
+			console.log("newCart", newCart);
 			return res.status(200).json(savedData);
 		}
 	} catch (error) {
@@ -56,7 +48,6 @@ export const AddCart = async (req, res) => {
 	}
 };
 
-
 export const GetCart = async (req, res) => {
 	const mobileno = req.params.id.trim();
 	console.log("Mobileno type:", typeof mobileno); // Should log 'string'
@@ -64,9 +55,9 @@ export const GetCart = async (req, res) => {
 
 	try {
 		const cart = await CartModule.findOne({ mobileno });
-		if (cart) {
-			console.log("Cart found:", cart);
-			res.status(200).json({result:cart});
+			if (cart) {
+			// console.log("Cart found:", cart);
+			res.status(200).json({ result: cart });
 		} else {
 			console.log("Cart not found");
 			res.status(404).json({ message: "Cart not found" });

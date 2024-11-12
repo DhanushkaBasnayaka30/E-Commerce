@@ -3,7 +3,8 @@ import { ShopContext } from "../context/ShopContext";
 import Title from "../components/Title";
 import ProductItems from "../components/ProductItems";
 import axios from "axios";
-
+import loadingCom from "../assets/square-loader.json"
+import { Player } from "@lottiefiles/react-lottie-player";
 function Collection() {
 	// const { products } = useContext(ShopContext);
 	const [products, setProducts] = useState([]);
@@ -13,8 +14,8 @@ function Collection() {
 	const [category, setCategory] = useState([]);
 	const [subCategory, setSubcategory] = useState([]);
 	const [sortType, setSortType] = useState("relevent");
-	const { search, showSearch } =
-		useContext(ShopContext);
+	const [isLoading, setLoading] = useState(false);
+	const { search, showSearch } = useContext(ShopContext);
 
 	// ===================================
 	// console.log(products[0].image[0]);
@@ -24,6 +25,7 @@ function Collection() {
 				const response = await axios.get("http://localhost:8090/api/get-items");
 				if (response && response.data) {
 					setProducts(response.data.result);
+					setLoading(true);
 					// setProductItems(response.data.result);
 				}
 			} catch (error) {
@@ -33,21 +35,18 @@ function Collection() {
 		fetchData();
 	}, []);
 
-
-
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, []);
 
 	useEffect(() => {
-		const fetchProductItems =  () => {
-			 setProductItems(products);
-			 setFilterProductItems(products);
+		const fetchProductItems = () => {
+			setProductItems(products);
+			setFilterProductItems(products);
 		};
-		
+
 		fetchProductItems();
 	}, [products]);
-	
 
 	const toggleCategory = (e) => {
 		if (category.includes(e.target.value)) {
@@ -111,7 +110,7 @@ function Collection() {
 		sortPrice();
 	}, [sortType]);
 
-	return (
+	return isLoading?(
 		<>
 			<div className="w-auto  hidden top-0 sm:flex ransition-all duration-500 ">
 				<div
@@ -320,21 +319,24 @@ function Collection() {
 
 					{/* Map Product */}
 					<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-4 p-2 py-4 border-gray-400">
-  {filterproductsItems.map((item, index) => (
-    <ProductItems
-      key={index}
-      name={item.name}
-      price={item.price}
-      image={item.image}
-      id={item._id}
-    />
-  ))}
-</div>
-
+						{filterproductsItems.map((item, index) => (
+							<ProductItems
+								key={index}
+								name={item.name}
+								price={item.price}
+								image={item.image}
+								id={item._id}
+							/>
+						))}
+					</div>
 				</div>
 			</div>
 		</>
-	);
+	):(
+		<div className="flex items-center justify-center h-screen">
+		<Player autoplay loop src={loadingCom} style={{ height: '300px', width: '300px' }} />
+	</div>
+	)
 }
 
 export default Collection;

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { ShopContext } from '../context/ShopContext'
-import { products } from '../assets/assets';
+
 import Title from './Title';
 import ProductItems from './ProductItems';
 import axios from 'axios';
@@ -14,6 +14,7 @@ useEffect(() => {
     try {
       const response = await axios.get("http://localhost:8090/api/best-seller");
       if (response && response.data) {
+     
         setbestSeller(response.data.result);
         // setProductItems(response.data.result);
       }
