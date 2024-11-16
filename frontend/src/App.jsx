@@ -17,6 +17,7 @@ import Dashboard from "../src/assets/Admin/pages/Dashboard";
 import UserLayout from "./Layout/UserLayout";
 import AdminLayout from "./Layout/AdminLayout";
 import Products from "./assets/Admin/pages/Products";
+import Registtion from "./pages/Registtion";
 
 const router = createBrowserRouter([
 	{
@@ -26,7 +27,7 @@ const router = createBrowserRouter([
 			{ path: "", element: <Home /> },
 			{ path: "about", element: <About /> },
 			{ path: "contact", element: <Contact /> },
-			{ path: "login", element: <Login /> },
+			
 			{ path: "orders", element: <Orders /> },
 			{ path: "cart", element: <Cart /> },
 			{ path: "place-order", element: <PlaceOrder /> },
@@ -35,6 +36,8 @@ const router = createBrowserRouter([
 			
 		],
 	},
+	{ path: "/login", element: <Login /> },
+	{ path: "/registation", element: <Registtion /> },
 	{
 		path: "/admin",
 		element: <AdminLayout />,
