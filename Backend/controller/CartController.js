@@ -14,7 +14,7 @@ export const AddCart = async (req, res) => {
 	try {
 		// Check if a cart already exists for this mobile number
 		const userCart = await CartModule.findOne({ mobileno });
-		console.log(userCart);
+		
 		if (userCart) {
 			// If cart exists, check if the item is already in the cart
 			const existingItemIndex = userCart.items.findIndex(
@@ -39,7 +39,7 @@ export const AddCart = async (req, res) => {
 			});
 
 			const savedData = await newCart.save();
-			console.log("newCart", newCart);
+			
 			return res.status(200).json(savedData);
 		}
 	} catch (error) {
@@ -51,7 +51,7 @@ export const AddCart = async (req, res) => {
 export const GetCart = async (req, res) => {
 	const mobileno = req.params.id.trim();
 	console.log("Mobileno type:", typeof mobileno); // Should log 'string'
-	console.log("Mobileno value:", mobileno);
+
 
 	try {
 		const cart = await CartModule.findOne({ mobileno });
@@ -67,3 +67,10 @@ export const GetCart = async (req, res) => {
 		res.status(500).json({ message: "Error retrieving cart" });
 	}
 };
+
+export const GetCartTotal  =async(req,res) =>{
+ const mobile = req.params.id;
+ console.log("cartController",mobile);
+ const cartTotal = await CartModule.findOne({mobileno:mobile})
+ console.log(cartTotal);
+}

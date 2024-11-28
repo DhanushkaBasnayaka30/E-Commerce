@@ -101,7 +101,7 @@ function Navbar() {
 							<Link to="/cart">
 								<img src={assets.cart_icon} alt="" className="w-6 h-6" />
 
-								<span className="absolute w-5 text-sm text-white leading-4  right-[-10px] bottom-[-8px] bg-gray-900 rounded-full">
+								<span className="absolute w-4 flex justify-center items-center h-4 text-white leading-4  right-[-10px] bottom-[-8px] bg-gray-700 text-xs rounded-full">
 									{itemCount} {/* Call the function */}
 								</span>
 							</Link>

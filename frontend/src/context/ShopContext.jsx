@@ -12,6 +12,7 @@ const ShopContextProvider = (props) => {
 	const [visible, setVisible] = useState(false);
 	const [cartItem, setCartItems] = useState({});
 	const [itemCount, setItemCount] = useState(0);
+	const[mobileNumber,setMobileNumber] =useState();
 
 	// Fetch product data from API
 	useEffect(() => {
@@ -94,7 +95,21 @@ const ShopContextProvider = (props) => {
 			);
 		}, 0);
 	};
+  const validateMobileNumber = (number) => {
+    // Assuming a Sri Lankan mobile number format (starts with 07 followed by 8 digits)
+    const phoneRegex = /^07\d{8}$/;
+    return phoneRegex.test(number);
+  };
 
+	const handleMobileChange = (number) => {
+  
+    setMobileNumber(number);
+
+    // Validate the mobile number
+    if (!validateMobileNumber(value)) {
+      console.log("Invalid mobile number");
+    }
+  };
 	// Memoize the value object to avoid unnecessary re-renders
 	const value = useMemo(() => ({
 		products,
@@ -114,6 +129,9 @@ const ShopContextProvider = (props) => {
 		setCartItems,
 		updateQuantity,
 		getCartAmount,
+		mobileNumber,
+		setMobileNumber,
+		handleMobileChange,
 	}), [
 		products,
 		currency,

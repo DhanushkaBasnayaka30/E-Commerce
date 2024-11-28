@@ -1,7 +1,10 @@
 import {
 	createBrowserRouter,
 	RouterProvider,
-} from "react-router-dom";
+}from "react-router-dom";
+
+import { Provider } from "react-redux";
+import { store } from "../../frontend/src/Redux/store/store.js";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -49,7 +52,11 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-	return <RouterProvider router={router} />;
+	return (
+		<Provider store={store}>
+			<RouterProvider router={router} />
+		</Provider>
+	);
 }
 
 export default App;

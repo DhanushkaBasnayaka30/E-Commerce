@@ -8,6 +8,8 @@ import { FaRegCommentAlt } from "react-icons/fa";
 import axios from "axios";
 import loadingCom from "../assets/square-loader.json";
 import { Player } from "@lottiefiles/react-lottie-player";
+import { useSelector } from "react-redux";
+import { selectmobile } from "../Redux/Slices/UserSlice";
 function Product() {
 	const previousComments = [
 		"This T-shirt is incredibly comfortable! The pure cotton material feels soft against the skin, making it perfect for all-day wear.",
@@ -18,7 +20,7 @@ function Product() {
 	];
 
 	const { id } = useParams(); // productID is a string
-	const mobileno = "0726837104";
+	const mobileno = useSelector(selectmobile);
 	const [productData, setProductData] = useState(null); // Initialize as null
 	const [image, setImage] = useState("");
 	const [selectedSize, setSelectedSize] = useState(null);

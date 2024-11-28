@@ -81,7 +81,7 @@ export const AddItem = async (req, res) => {
 export const GetItems = async (req, res) => {
 	try {
 		const items = await ItemModule.find();
-		console.log(items);
+		
 		if (items && items.length > 0) {
 			let folderPath = "item";
 			const publicUrls = await getImagesWithUrls("itemImage", folderPath);
@@ -112,7 +112,7 @@ export const GetItems = async (req, res) => {
 					bestseller: item.bestseller,
 				};
 			});
-			console.log(itemsWithImages);
+			
 			res.status(200).json({ result: itemsWithImages });
 		} else {
 			res.status(404).json({ Message: "No items found" });

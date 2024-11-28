@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { createClient } from "@supabase/supabase-js";
 import ItemRoute from "./routes/ItemRoutes.js";
 import CartRoute from "./routes/CartRoutes.js";
+import UserRoute from "./routes/UserRoute.js";
 
 // Load environment variables
 dotenv.config();
@@ -40,6 +41,7 @@ mongoose
   .connect(mongoURL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    
   })
   .then(() => {
     console.log("MongoDB connection successful");
@@ -54,5 +56,6 @@ mongoose
 // Routes
 app.use("/api", ItemRoute);
 app.use("/api/cart", CartRoute);
+app.use("/api/user", UserRoute);
 
 export default app;
