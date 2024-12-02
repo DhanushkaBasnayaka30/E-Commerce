@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { setLoginValue } from "../Redux/Slices/UserSlice";
 
+
 function Login() {
 	
 const dispatch = useDispatch();
@@ -56,36 +57,59 @@ const dispatch = useDispatch();
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-
-		// Check for errors
+	
+		// Check for client-side validation errors
 		if (error.mobile_error || error.password_error) {
+			alert("Please fix the errors in the form.");
 			return;
 		}
-
+	
 		if (!data.mobile || !data.password) {
-			alert("Please fill in all fields");
+			alert("Please fill in all fields.");
 			return;
 		}
+	
+		// Prepare request data
 		const req_data = {
 			mobile: data.mobile,
 			password: data.password,
 		};
-		const response = await axios.post(
-			"http://localhost:8090/api/user/login",
-			req_data
-		);
-		if(response.data.Login){
-			dispatch(
-				setLoginValue({
-					name: response.data.name,
-					mobile: response.data.mobile,
-					token: true,
-				})
-			);
-			navigate("/")
+	
+		try {
+			// Make API request
+			const response = await axios.post("http://localhost:8090/api/user/login", req_data,{withCredentials:true});
+	
+			console.log(response.data.token);
+		
+
+			// Handle successful login
+			if (response.data.Login) {
+				dispatch(
+					setLoginValue({
+						name: response.data.name,
+						mobile: response.data.mobile,
+						token: true,
+					})
+				);
+				navigate("/"); // Redirect to the home page
+			} else {
+				// Handle unexpected server response
+				alert("Login failed. Please try again.");
+			}
+		} catch (error) {
+			// Handle errors
+			if (error.response) {
+				// Server-side error (e.g., invalid credentials)
+				alert(error.response.data.messagge || "Login failed. Please check your credentials.");
+			} else if (error.request) {
+				// Network or connection error
+				alert("Unable to connect to the server. Please try again later.");
+			} else {
+				// Other errors (e.g., unexpected issues)
+				alert("An error occurred. Please try again.");
+			}
 		}
 	};
-
 	return (
 		<div className="h-screen flex items-center justify-center bg-gray-100">
 			<div className="w-full max-w-md bg-white shadow-md rounded-lg p-8">

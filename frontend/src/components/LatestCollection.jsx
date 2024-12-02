@@ -11,7 +11,8 @@ function LatestCollection() {
   useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await axios.get("http://localhost:8090/api/get-items");
+				const response = await axios.get("http://localhost:8090/api/get-items",{withCredentials:true});
+        console.log(response);
 				if (response && response.data) {
           console.log(response.data.result.slice(0, 10));
 					setLatestCollection(response.data.result.slice(0, 10));

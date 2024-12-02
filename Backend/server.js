@@ -6,6 +6,10 @@ import { createClient } from "@supabase/supabase-js";
 import ItemRoute from "./routes/ItemRoutes.js";
 import CartRoute from "./routes/CartRoutes.js";
 import UserRoute from "./routes/UserRoute.js";
+import UserAuthorize from "./Authentication/Authenticationmjs";
+import cookieParser from "cookie-parser";
+import bodyParser from 'body-parser';
+import session from 'express-session'; 
 
 // Load environment variables
 dotenv.config();
@@ -22,14 +26,26 @@ if (!mongoURL) {
 }
 
 
-// Create Supabase client
-// const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-// CORS configuration
 
 app.use(
   cors({
-    origin: "*",
+    origin: "http://localhost:5178", 
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTION", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+
+    credentials: true,
+
+  })
+);
+app.use(cookieParser());
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(
+  session({
+    secret: "your_secret_key",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }, // Set to true if using HTTPS
   })
 );
 

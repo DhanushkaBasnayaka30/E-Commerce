@@ -79,6 +79,7 @@ export const AddItem = async (req, res) => {
 };
 
 export const GetItems = async (req, res) => {
+	console.log("fsgsfdgsfdg");
 	try {
 		const items = await ItemModule.find();
 		

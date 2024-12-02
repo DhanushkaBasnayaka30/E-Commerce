@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import UserModule from "../modules/UserModule.js";
 import jwt from "jsonwebtoken";
+import cookieParser from 'cookie-parser';
 
 export const Registration = async (req, res) => {
 	console.log(req.body);
@@ -39,32 +40,43 @@ export const Registration = async (req, res) => {
 };
 
 export const Login = async (req, res) => {
+	console.log(req.body);
 	try {
 		const { mobile, password } = req.body;
 		console.log(mobile, password);
 
+		// Check if user exists
 		const ExistUser = await UserModule.findOne({ mobile });
 		if (!ExistUser) {
-			return res.status(404).json({ message: "Can not find this number" });
+			return res.status(404).json({ message: "Cannot find this number" });
 		}
 
 		console.log("Password:", ExistUser.password);
+
+		// Compare provided password with the hashed password
 		const isMatch = await bcrypt.compare(password, ExistUser.password);
 		if (isMatch) {
 			console.log("Login successful!");
 
-			const token = jwt.sign({ id: mobile }, process.env.JWT_SECRET_KEY);
+			// Generate a JWT token
+			const token = jwt.sign({ id: mobile }, process.env.JWT_SECRET_KEY, {
+				expiresIn: "1d",
+			});
 			const name = ExistUser.name;
+			console.log("token", token);
+
+			// Set token as cookie in the response
 			return res
 				.cookie("jwtToken", token, {
 					httpOnly: true,
-					maxAge: 24 * 60 * 60 * 1000, // 1 day
+					maxAge: 24 * 60 * 60 * 1000,
 				})
 				.json({
 					Login: true,
+					token:token, // Set to true for successful login
 					message: "Login successful",
 					mobile: mobile,
-          name:name
+					name: name,
 				});
 		} else {
 			console.log("Invalid credentials.");

@@ -22,7 +22,7 @@ function Collection() {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await axios.get("http://localhost:8090/api/get-items");
+				const response = await axios.get("http://localhost:8090/api/get-items",{withCredentials:true});
 				if (response && response.data) {
 					setProducts(response.data.result);
 					setLoading(true);
