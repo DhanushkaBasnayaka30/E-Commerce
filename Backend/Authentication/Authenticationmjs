@@ -1,26 +1,28 @@
 import jwt from "jsonwebtoken";
 
 function UserAuthorize(req, res, next) {
-	const token = req.cookies.jwtToken;
-  if(!token){
-    return res.status(400).json({message:"Unauthorized"})
+  const token = req.cookies.jwtToken;
+ 
+
+  if (!token) {
+    
+    return res.status(400).json({ message: "Unauthorized " });
   }
-  jwt.verify(token,process.env.JWT_SECRET_KEY,(err,decoded)=>{
-    if(err){
-      return res.status(400).json({message:"taoken invalied or expired"})
+
+  jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
+    if (err) {
+      console.log("Token invalid or expired");
+      return res.status(400).json({ message: "Token invalid or expired" });
     }
-    
-    if(decoded.userType!=="Manager"){
-      return res.status(403).json({messagge:"forbidden"})
+
+    if (decoded.userType !== "user") {
+      console.log("forbidden");
+      return res.status(403).json({ message: "Forbidden" });
     }
-    req.user= decoded;
-    
+
+    req.user = decoded;
     next();
-  })
+  });
 }
 
 export default UserAuthorize;
-
-
-
-

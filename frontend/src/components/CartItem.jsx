@@ -8,6 +8,7 @@ import Loader from "../assets/square-loader.json";
 import { Player } from "@lottiefiles/react-lottie-player";
 import { selectmobile } from "../Redux/Slices/UserSlice";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 function CartItem() {
 	// Destructure context values
@@ -16,7 +17,7 @@ function CartItem() {
 	const [products, setProducts] = useState([]);
 	const [isLoading, setLoading] = useState(false);
 	const mobileno = useSelector(selectmobile);
-	
+	const navigate= useNavigate();
 
 	// Scroll to the top on component mount
 	useEffect(() => {
@@ -30,7 +31,7 @@ function CartItem() {
 			try {
 				// Fetch products
 				const productResponse = await axios.get(
-					"http://localhost:8090/api/get-items"
+					"http://localhost:8090/api/get-items",{withCredentials:true}
 				);
 				const fetchedProducts = productResponse?.data?.result || [];
 				if (productResponse) {
@@ -42,7 +43,7 @@ function CartItem() {
         if (fetchedProducts.length > 0) {
           try {
             const cartResponse = await axios.post(
-              `http://localhost:8090/api/cart/get/${mobileno}`
+              `http://localhost:8090/api/cart/get/${mobileno}`,{},{withCredentials:true}
             );
             
             // Extracting cart data
@@ -62,11 +63,14 @@ function CartItem() {
             // Handle specific error scenarios
             if (error.response) {
               // Server responded with a status code other than 2xx
-              console.error("Server error:", error.response.data.message);
+              // console.error("Server error:", error.response.data.message);
               if (error.response.status === 404) {
                 console.log("Cart not found for the given mobile number.");
               } else {
                 console.log("An error occurred:", error.response.data.message);
+								if(error.response.data.message==="Unauthorized "){
+								navigate("/login")
+								}
               }
             } else if (error.request) {
               // Request was made but no response was received

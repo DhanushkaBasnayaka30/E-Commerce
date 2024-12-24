@@ -18,46 +18,47 @@ const app = express();
 const PORT = process.env.PORT || 8091;
 const mongoURL = process.env.MONGO_URI;
 
-
 // Check for required environment variables
 if (!mongoURL) {
   console.error("Error: MONGO_URI is not defined in environment variables.");
   process.exit(1);
 }
 
-
-
+// CORS configuration to allow credentials
 app.use(
   cors({
-    origin: "http://localhost:5178", 
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTION", "PATCH"],
+    origin: "http://localhost:5178", // Replace with your frontend URL
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
-
-    credentials: true,
-
+    credentials: true, // Allow cookies to be sent with requests
   })
 );
-app.use(cookieParser());
 
-app.use(bodyParser.urlencoded({ extended: true }));
+// Middleware setup
+app.use(cookieParser());  // Cookie parser middleware
+app.use(express.json());   // JSON body parser
+app.use(bodyParser.urlencoded({ extended: true })); // URL-encoded body parser
+
+// Session configuration for storing session data on the server
 app.use(
   session({
-    secret: "your_secret_key",
+    secret:process.env.JWT_SECRET_KEY,
     resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false }, // Set to true if using HTTPS
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === "production", // Set to true in production
+      httpOnly: true,
+      sameSite: false,
+    },
   })
 );
 
-// JSON parser middleware
-app.use(express.json());
 
 // MongoDB connection
 mongoose
   .connect(mongoURL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    
   })
   .then(() => {
     console.log("MongoDB connection successful");
@@ -71,7 +72,8 @@ mongoose
 
 // Routes
 app.use("/api", ItemRoute);
-app.use("/api/cart", CartRoute);
+app.use("/api/cart",UserAuthorize, CartRoute);
 app.use("/api/user", UserRoute);
+
 
 export default app;

@@ -3,6 +3,9 @@ import { assets } from "../assets/assets";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import SearchBar from "./SearchBar";
 import { ShopContext } from "../context/ShopContext";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { logoutFun, setLoginValue } from "../Redux/Slices/UserSlice";
 
 const navDetails = [
 	{
@@ -36,6 +39,33 @@ function Navbar() {
 		useContext(ShopContext);
 
 		const navigate = useNavigate()
+const dispatch = useDispatch();
+
+const logout = async () => {
+  try {
+    const response = await axios.post("http://localhost:8090/api/user/logout", {}, { withCredentials: true });
+
+    if (response.status === 200) {
+      console.log("Logout successful:", response.data);
+			alert("Logout successful:.");
+      dispatch(logoutFun());
+    } else if (response.status === 400) {
+      console.warn("No token found or already logged out.");
+      alert("No token found or already logged out.");
+    } else {
+      console.error("Unexpected status:", response.status);
+    }
+  } catch (error) {
+
+		console.error("Logout failed:", error.response || error.message);
+		if (error.status === 400) {
+      console.warn("No token found or already logged out.");
+      alert("No token found or already logged out.");
+    }
+  }
+};
+
+
 			
 	return (
 		<>
@@ -91,7 +121,7 @@ function Navbar() {
 									<p className="cursor-pointer hover:text-black font-semibold" onClick={()=>(navigate("admin/dashboard"))}>
 										Admin
 									</p>
-									<p className="cursor-pointer hover:text-black font-semibold">
+									<p className="cursor-pointer hover:text-black font-semibold" onClick={()=>{logout()}}>
 										Logout
 									</p>
 								</div>

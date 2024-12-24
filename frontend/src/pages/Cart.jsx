@@ -13,8 +13,9 @@ function Cart() {
 	useEffect(() => {
 		const fetchData = async () => {
 			const response = await axios.get(
-				`http://localhost:8090/api/cart/getTotal/${mobile}`
+				`http://localhost:8090/api/cart/getTotal/${mobile}`,{withCredentials:true}
 			);
+			console.log(response);
 			if (response) {
 				console.log(response);
 			}

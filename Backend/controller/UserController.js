@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import UserModule from "../modules/UserModule.js";
 import jwt from "jsonwebtoken";
-import cookieParser from 'cookie-parser';
+import cookieParser from "cookie-parser";
 
 export const Registration = async (req, res) => {
 	console.log(req.body);
@@ -59,9 +59,17 @@ export const Login = async (req, res) => {
 			console.log("Login successful!");
 
 			// Generate a JWT token
-			const token = jwt.sign({ id: mobile }, process.env.JWT_SECRET_KEY, {
-				expiresIn: "1d",
-			});
+			const token = jwt.sign(
+				{
+					id: mobile,           // User's unique identifier
+					userType: "user",     // Specify the userType or role (e.g., "user" or "admin")
+				},
+				process.env.JWT_SECRET_KEY,
+				{
+					expiresIn: "1d",      // Token expiration time (1 day)
+				}
+			);
+			
 			const name = ExistUser.name;
 			console.log("token", token);
 
@@ -69,15 +77,17 @@ export const Login = async (req, res) => {
 			return res
 				.cookie("jwtToken", token, {
 					httpOnly: true,
-					maxAge: 24 * 60 * 60 * 1000,
+					maxAge: 24*60 *60* 1000,
 				})
 				.json({
 					Login: true,
-					token:token, // Set to true for successful login
+					token: token, // Set to true for successful login
 					message: "Login successful",
 					mobile: mobile,
 					name: name,
+					role: "user",
 				});
+
 		} else {
 			console.log("Invalid credentials.");
 			return res.status(401).json({ message: "Invalid credentials" });
@@ -87,3 +97,24 @@ export const Login = async (req, res) => {
 		return res.status(500).json({ message: "Server error" });
 	}
 };
+
+export const logout = async (req, res) => {
+  try {
+    console.log('In logout');
+    const token = req.cookies.jwtToken; // Access the specific cookie
+    console.log('Token:', token);
+
+    if (!token) {
+			console.log("no token found");
+      return res.status(400).json({ message: 'No token found' });
+    }
+
+    res.clearCookie('jwtToken',); // Clear the cookie on logout
+    res.status(200).json({ message: 'Logged out successfully' });
+  } catch (error) {
+    console.error('Logout error:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+

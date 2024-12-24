@@ -1,52 +1,83 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const loadFromLocalStorage = () => {
-  const name = localStorage.getItem('name') || ""; 
-  const mobile = localStorage.getItem('mobile') || ""; 
-  const token= localStorage.getItem("token") || false;
-  return { name, mobile,token };
+// Helper function to set sessionStorage with expiration
+const setWithExpiry = (key, value, ttl) => {
+  const now = new Date();
+  const item = {
+    value: value,
+    expiry: now.getTime() + ttl,
+  };
+  sessionStorage.setItem(key, JSON.stringify(item));
 };
 
-const initialState = loadFromLocalStorage();
+// Helper function to get sessionStorage with expiration check
+const getWithExpiry = (key) => {
+  const itemStr = sessionStorage.getItem(key);
+  if (!itemStr) return null;
+
+  try {
+    const item = JSON.parse(itemStr);
+    const now = new Date();
+    if (item.expiry && now.getTime() > item.expiry) {
+      sessionStorage.removeItem(key); // Remove if expired
+      return null;
+    }
+    return item.value;
+  } catch (error) {
+    // If parsing fails, remove the item and return null
+    sessionStorage.removeItem(key);
+    return null;
+  }
+};
+
+// Function to load from sessionStorage
+const loadFromSessionStorage = () => {
+  const name = getWithExpiry("name") || "";
+  const mobile = getWithExpiry("mobile") || "";
+  const token = getWithExpiry("token") || false;
+  return { name, mobile, token };
+};
+
+// Initial state loaded from sessionStorage
+const initialState = loadFromSessionStorage();
 
 export const LoginSlice = createSlice({
   name: "loginslice",
   initialState,
   reducers: {
     setLoginValue: (state, action) => {
-      const { name, mobile ,token} = action.payload;
-      state.name = name; 
+      const { name, mobile, token } = action.payload;
+      state.name = name;
       state.mobile = mobile;
       state.token = token;
-      localStorage.setItem('name', name); 
-      localStorage.setItem('mobile', mobile); 
-      localStorage.setItem('token', token); 
+
+      // Set sessionStorage with 1-day expiration (24 hours in milliseconds)
+      const oneDayInMs = 24 * 60 * 60 * 1000;
+      setWithExpiry("name", name, oneDayInMs);
+      setWithExpiry("mobile", mobile, oneDayInMs);
+      setWithExpiry("token", token, oneDayInMs);
     },
     logoutFun: (state) => {
-      state.name = ""; 
+      state.name = "";
       state.mobile = "";
       state.token = false;
 
-      localStorage.removeItem('name');
-      localStorage.removeItem('mobile');
-      localStorage.removeItem('token');
+      sessionStorage.removeItem("name");
+      sessionStorage.removeItem("mobile");
+      sessionStorage.removeItem("token");
 
-      if(localStorage.getItem('email') &&
-      localStorage.getItem('mobile')){
- 
-        console.log("LocalStorege value  removed");
-      }else{
-        console.log("LocalStorege value not removed");
+      if (!sessionStorage.getItem("name") && !sessionStorage.getItem("mobile") && !sessionStorage.getItem("token")) {
+        console.log("SessionStorage values removed");
+      } else {
+        console.log("SessionStorage values not removed");
       }
-
     },
   },
 });
 
 export const { setLoginValue, logoutFun } = LoginSlice.actions;
 
-
-export const selectEmail = (state) => state.loginslice.email;
+export const selectEmail = (state) => state.loginslice.name;
 export const selectmobile = (state) => state.loginslice.mobile;
 export const selectToken = (state) => state.loginslice.token;
 
