@@ -28,50 +28,56 @@ const navDetails = [
 		title: "CONTACT",
 		url: "/contact",
 	},
-	
 ];
 console.log(navDetails);
 function Navbar() {
 	const [visible, setVisible] = useState(false);
- 
 
-	const { search, setSearch, showSearch, setShowSearch, fetchItemCount ,cartItem,itemCount} =
-		useContext(ShopContext);
+	const {
+		search,
+		setSearch,
+		showSearch,
+		setShowSearch,
+		fetchItemCount,
+		cartItem,
+		itemCount,
+	} = useContext(ShopContext);
 
-		const navigate = useNavigate()
-const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
-const logout = async () => {
-  try {
-    const response = await axios.post("http://localhost:8090/api/user/logout", {}, { withCredentials: true });
+	const logout = async () => {
+		try {
+			const response = await axios.post(
+				"http://localhost:8090/api/user/logout",
+				{},
+				{ withCredentials: true }
+			);
 
-    if (response.status === 200) {
-      console.log("Logout successful:", response.data);
-			alert("Logout successful:.");
-      dispatch(logoutFun());
-    } else if (response.status === 400) {
-      console.warn("No token found or already logged out.");
-      alert("No token found or already logged out.");
-    } else {
-      console.error("Unexpected status:", response.status);
-    }
-  } catch (error) {
+			if (response.status === 200) {
+				console.log("Logout successful:", response.data);
+				alert("Logout successful:.");
+				dispatch(logoutFun());
+			} else if (response.status === 400) {
+				console.warn("No token found or already logged out.");
+				alert("No token found or already logged out.");
+			} else {
+				console.error("Unexpected status:", response.status);
+			}
+		} catch (error) {
+			console.error("Logout failed:", error.response || error.message);
+			if (error.status === 400) {
+				console.warn("No token found or already logged out.");
+				alert("No token found or already logged out.");
+			}
+		}
+	};
 
-		console.error("Logout failed:", error.response || error.message);
-		if (error.status === 400) {
-      console.warn("No token found or already logged out.");
-      alert("No token found or already logged out.");
-    }
-  }
-};
-
-
-			
 	return (
 		<>
 			<div className="sm:left-[5%] mx-auto flex justify-between py-5 font-medium sm:w-[90%] w-full  fixed z-50  bg-white top-0 flex-col px-2">
 				<div className=" flex bg-white justify-between ">
-					<div className="animate-bounce animate-infinite animate-ease-in-out animate-normal" >
+					<div className="animate-bounce animate-infinite animate-ease-in-out animate-normal">
 						{/* brandlogo */}
 						<img src={assets.logo} alt="" className="w-36" />
 					</div>
@@ -118,10 +124,16 @@ const logout = async () => {
 									<p className="cursor-pointer hover:text-black font-semibold">
 										Orders
 									</p>
-									<p className="cursor-pointer hover:text-black font-semibold" onClick={()=>(navigate("admin/dashboard"))}>
+									<p
+										className="cursor-pointer hover:text-black font-semibold"
+										onClick={() => navigate("admin/dashboard")}>
 										Admin
 									</p>
-									<p className="cursor-pointer hover:text-black font-semibold" onClick={()=>{logout()}}>
+									<p
+										className="cursor-pointer hover:text-black font-semibold"
+										onClick={() => {
+											logout();
+										}}>
 										Logout
 									</p>
 								</div>

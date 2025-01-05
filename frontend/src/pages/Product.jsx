@@ -8,8 +8,10 @@ import { FaRegCommentAlt } from "react-icons/fa";
 import axios from "axios";
 import loadingCom from "../assets/square-loader.json";
 import { Player } from "@lottiefiles/react-lottie-player";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectmobile } from "../Redux/Slices/UserSlice";
+import { toast } from "react-toastify";
+import { addItem } from "../Redux/Slices/CartSlice";
 function Product() {
 	const previousComments = [
 		"This T-shirt is incredibly comfortable! The pure cotton material feels soft against the skin, making it perfect for all-day wear.",
@@ -25,6 +27,7 @@ function Product() {
 	const [image, setImage] = useState("");
 	const [selectedSize, setSelectedSize] = useState(null);
 	const [isReveiw, setReivew] = useState(false);
+	const dispatch = useDispatch();
 	useEffect(() => {
 		// Wait 200 milliseconds before scrolling to the top for smooth transition
 		const timer = setTimeout(() => {
@@ -42,12 +45,13 @@ function Product() {
 		const fetchData = async () => {
 			try {
 				const response = await axios.post(
-					`http://localhost:8090/api/get-item/${id}`
+					`http://localhost:8090/api/get-item/${id}`,{},{withCredentials:true}
 				);
 
 				if (response) {
 					setTimeout(() => {
 						setProductData(response.data.result);
+						setSelectedSize(null);
 					}, 1000);
 					const image = response.data.result.image[0];
 					setImage(productImages[image]);
@@ -61,26 +65,45 @@ function Product() {
 	}, [id]);
 
 	const addToCart = async (id, size, quantity) => {
-		console.log(id, size);
-		try {
-			const response = await axios.post(
-				`http://localhost:8090/api/cart/add/${mobileno}`,
-				{ id, size, quantity }
-			);
-			if (response) {
-				console.log(response.data);
+		// console.log(id, size,quantity);
+		if (size) {
+			console.log(id,size,quantity);
+			dispatch(addItem({ itemId: id, size: size, quantity: quantity }))
+		
 			}
-		} catch (error) {
-			if (error.response) {
-				console.log("Error Response:", error.response.data);
-				console.log("Error Status:", error.response.status);
-			} else if (error.request) {
-				console.log("Error Request:", error.request);
-			} else {
-				console.log("Error Message:", error.message);
-			}
+		 else {
+			toast.warn("please choose your size");
 		}
 	};
+
+
+
+	// const addToCart = async (id, size, quantity) => {
+	// 	console.log(id, size,quantity);
+	// 	if (size) {
+	// 		try {
+	// 			const response = await axios.post(
+	// 				`http://localhost:8090/api/cart/add/${mobileno}`,
+	// 				{ id, size, quantity },{withCredentials:true}
+	// 			);
+	// 			if (response) {
+	// 				console.log(response.data);
+	// 				toast.success("Updated your cart");
+	// 			}
+	// 		} catch (error) {
+	// 			if (error.response) {
+	// 				console.log("Error Response:", error.response.data);
+	// 				console.log("Error Status:", error.response.status);
+	// 			} else if (error.request) {
+	// 				console.log("Error Request:", error.request);
+	// 			} else {
+	// 				console.log("Error Message:", error.message);
+	// 			}
+	// 		}
+	// 	} else {
+	// 		toast.warn("please choose your size");
+	// 	}
+	// };
 	return productData ? (
 		<div className="border-t pt-10 transition-opacity ease-in duration-500 opacity-100 sm:pt-32 p-2 animate-fade-down animate-once animate-duration-1000 animate-delay-100 animate-ease-in-out animate-normal">
 			{/* product Data */}

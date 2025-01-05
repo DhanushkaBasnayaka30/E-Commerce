@@ -9,6 +9,7 @@ export const AddCart = async (req, res) => {
 		quantity: req.body.quantity,
 	};
 
+	console.log("cart size in add cart",size);
 	const cartItem = { itemId: req.body.id, sizes: size };
 
 	try {
