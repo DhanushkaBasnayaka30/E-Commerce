@@ -7,18 +7,29 @@ import { productImages } from "../assets/assets";
 import Loader from "../assets/square-loader.json";
 import { Player } from "@lottiefiles/react-lottie-player";
 import { selectmobile } from "../Redux/Slices/UserSlice";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import {  decreaseQuantity, increaseQuantity, removeItem, selectItems } from "../Redux/Slices/CartSlice";
 
 function CartItem() {
 	// Destructure context values
 	const { currency, updateQuantity } = useContext(ShopContext);
-	const [cartItems, setCartItems] = useState([]);
+	// const [cartItems, setCartItems] = useState([]);
 	const [products, setProducts] = useState([]);
 	const [isLoading, setLoading] = useState(false);
 	const mobileno = useSelector(selectmobile);
-	const navigate= useNavigate();
+	const navigate = useNavigate();
+	const [cartItems, setNewCartItem] = useState([]);
+const dispatch = useDispatch();
+	const items = useSelector(selectItems);
 
+	
+	useEffect(() => {
+		setNewCartItem(items);
+	}, [items]);
+
+	console.log(items);
+	
 	// Scroll to the top on component mount
 	useEffect(() => {
 		window.scrollTo(0, 0);
@@ -31,60 +42,17 @@ function CartItem() {
 			try {
 				// Fetch products
 				const productResponse = await axios.get(
-					"http://localhost:8090/api/get-items",{withCredentials:true}
+					"http://localhost:8090/api/get-items",
+					{ withCredentials: true }
 				);
 				const fetchedProducts = productResponse?.data?.result || [];
 				if (productResponse) {
 					setProducts(fetchedProducts);
 				}
-       
 
-				// Fetch cart items only if products are available
-        if (fetchedProducts.length > 0) {
-          try {
-            const cartResponse = await axios.post(
-              `http://localhost:8090/api/cart/get/${mobileno}`,{},{withCredentials:true}
-            );
-            
-            // Extracting cart data
-            const cartData = cartResponse?.data?.result?.items || [];
-        
-            // Check if response is successful and set cart items
-            if (cartResponse.status === 200) {
-              setCartItems(cartData);
-              console.log("Cart fetched successfully:", cartData);
-            }
-        
-            // Check if response indicates "Cart not found"
-            if (cartResponse.data.message === "Cart not found") {
-              console.log("Cart not found");
-            }
-          } catch (error) {
-            // Handle specific error scenarios
-            if (error.response) {
-              // Server responded with a status code other than 2xx
-              // console.error("Server error:", error.response.data.message);
-              if (error.response.status === 404) {
-                console.log("Cart not found for the given mobile number.");
-              } else {
-                console.log("An error occurred:", error.response.data.message);
-								if(error.response.data.message==="Unauthorized "){
-								navigate("/login")
-								}
-              }
-            } else if (error.request) {
-              // Request was made but no response was received
-              console.error("No response from the server:", error.request);
-            } else {
-              // Error occurred while setting up the request
-              console.error("Error in request setup:", error.message);
-            }
-          }
-        }
-        
 			} catch (error) {
 				console.error("Error fetching data:", error);
-				setCartItems([]); // Reset on error
+				setNewCartItem([]); // Reset on error
 			} finally {
 				setLoading(false);
 			}
@@ -134,7 +102,7 @@ function CartItem() {
 										<p className="font-bold w-full text-left">
 											{productItem.name}
 										</p>
-										
+
 										<div className="text-sm text-gray-700 flex items-center gap-x-6">
 											<p className="text-base font-semibold">
 												{currency}
@@ -149,27 +117,15 @@ function CartItem() {
 										<div className="w-full h-auto flex gap-x-3 mt-2">
 											<button
 												className="px-1 py-1 border border-black rounded-sm"
-												onClick={() =>
-													updateQuantity(
-														item._id,
-														product.quantity - 1,
-														product.size
-													)
-												}
+												onClick={() => dispatch(decreaseQuantity({ itemId: item.itemId, size: product.size}))}
 												disabled={product.quantity === 1}>
 												<IoMdRemove className="text-xs" />
 											</button>
 											<p>{product.quantity}</p>
 											<button
 												className="px-1 py-1 border border-black rounded-sm"
-												onClick={() =>
-													updateQuantity(
-														item._id,
-														product.quantity + 1,
-														product.size
-													)
-												}>
-												<IoMdAdd className="text-xs" />
+												onClick={() => dispatch(increaseQuantity({ itemId: item.itemId, size: product.size }))}>
+												<IoMdAdd  className="text-xs" />
 											</button>
 										</div>
 									</div>
@@ -179,7 +135,7 @@ function CartItem() {
 								<div className="sm:w-1/4 w-1/6 flex items-center justify-center">
 									<ImBin
 										className="w-5 h-5 text-black cursor-pointer hover:scale-110"
-										onClick={() => updateQuantity(item._id, 0, product.size)}
+										onClick={() => dispatch(removeItem({ itemId: item.itemId, size: product.size }))}
 									/>
 								</div>
 							</div>

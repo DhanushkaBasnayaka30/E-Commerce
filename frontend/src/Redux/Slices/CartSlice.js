@@ -62,6 +62,36 @@ const cartSlice = createSlice({
         }
       }
     },
+    increaseQuantity: (state, action) => {
+      const { itemId, size } = action.payload;
+
+      const existingItem = state.items.find((item) => item.itemId === itemId);
+      if (existingItem) {
+        const existingSize = existingItem.sizes.find((s) => s.size === size);
+        if (existingSize) {
+          existingSize.quantity += 1;
+        }
+      }
+    },
+    decreaseQuantity: (state, action) => {
+      const { itemId, size } = action.payload;
+
+      const existingItem = state.items.find((item) => item.itemId === itemId);
+      if (existingItem) {
+        const existingSize = existingItem.sizes.find((s) => s.size === size);
+        if (existingSize && existingSize.quantity > 1) {
+          existingSize.quantity -= 1;
+        } else {
+          // Remove the size from the item if quantity becomes 0
+          existingItem.sizes = existingItem.sizes.filter((s) => s.size !== size);
+
+          // If no sizes left, remove the item completely
+          if (existingItem.sizes.length === 0) {
+            state.items = state.items.filter((item) => item.itemId !== itemId);
+          }
+        }
+      }
+    },
     clearCart: (state) => {
       state.mobileno = '';
       state.items = [];
@@ -70,7 +100,8 @@ const cartSlice = createSlice({
 });
 
 // Export the actions
-export const { setMobileNo, addItem, removeItem, clearCart } = cartSlice.actions;
+export const { setMobileNo, addItem, removeItem, increaseQuantity, decreaseQuantity, clearCart } = cartSlice.actions;
+export const selectItems = (state) => state.cart.items;
 
 // Export the reducer
 export default cartSlice.reducer;
