@@ -82,7 +82,7 @@ export const GetItems = async (req, res) => {
 	console.log("fsgsfdgsfdg");
 	try {
 		const items = await ItemModule.find();
-		
+
 		if (items && items.length > 0) {
 			let folderPath = "item";
 			const publicUrls = await getImagesWithUrls("itemImage", folderPath);
@@ -91,20 +91,22 @@ export const GetItems = async (req, res) => {
 			const itemsWithImages = items.map((item) => {
 				const imageUrls = item.image.map((imgPath) => {
 					// Extract the image name
-					const imagename = imgPath.split("/").pop();
+					const imagename = imgPath.split("/").pop()+'.png';
 					// Find the matching public URL
 					const matchingUrl = publicUrls.find((img) =>
 						img.url.includes(imagename)
 					);
 					return matchingUrl ? matchingUrl.url : null;
 				});
-
+				// console.log(imageUrls);
 				return {
 					_id: item._id,
 					name: item.name,
 					description: item.description,
 					price: item.price,
-					image: imageUrls.filter((url) => url !== null), // Include only non-null URLs
+
+					// image: imageUrls.filter((url) => url !== null), // Include only non-null URLs
+					image: imageUrls,
 					category: item.category,
 					subCategory: item.subCategory,
 					review: item.review,
@@ -113,7 +115,7 @@ export const GetItems = async (req, res) => {
 					bestseller: item.bestseller,
 				};
 			});
-			
+
 			res.status(200).json({ result: itemsWithImages });
 		} else {
 			res.status(404).json({ Message: "No items found" });
@@ -137,14 +139,19 @@ export const BestSeller = async (req, res) => {
 				const publicUrls = await getImagesWithUrls("itemImage", folderPath);
 
 				const bestSellerswith_image = bestSellers.map((item) => {
+
+
 					const imageUrls = item.image.map((imgPath) => {
 						const imagename = imgPath.split("/").pop();
-
-						const matchingUrl = publicUrls.find((img) =>
-							img.url.includes(imagename)
-						);
+						// Create a regex that looks for the exact image name at the end of the URL
+						const regex = new RegExp(`${imagename}.png`);
+					console.log("regex",regex);
+						const matchingUrl = publicUrls.find((img) => regex.test(img.url));
+					
+						console.log(imagename + ' --> ' + (matchingUrl ? matchingUrl.url : 'Not found'));
 						return matchingUrl ? matchingUrl.url : null;
 					});
+					
 
 					return {
 						_id: item._id,
@@ -187,5 +194,43 @@ export const GetProduct = async (req, res) => {
 		}
 	} catch (error) {
 		console.log("Server Error connecting item", error);
+	}
+};
+export const ProductPrice = async (req, res) => {
+	var totalItems = 0;
+	try {
+		const orderIdies = req.body["result"];
+		console.log("Received Order IDs:", orderIdies);
+
+		const items = await Promise.all(
+			orderIdies.map(async ({ itemId, totalQuantity }) => {
+				const item = await ItemModule.findById(itemId);
+				if (!item) {
+					console.error(`Item with ID ${itemId} not found`);
+					return null;
+				}
+				console.log(`Item Price for ${itemId}:`, item.price);
+				totalItems = totalItems + totalQuantity;
+				return item.price * totalQuantity; // Multiply by quantity
+			})
+		);
+		console.log("item in ", totalItems);
+		// Filter out null values (items not found)
+		const validPrices = items.filter((price) => price !== null);
+
+		// Calculate total price
+		const total = validPrices.reduce((sum, price) => sum + price, 0);
+		console.log("Total Price:", total);
+
+		if (validPrices.length === 0) {
+			return res
+				.status(404)
+				.json({ success: false, message: "No items found" });
+		}
+
+		res.json({ success: true, total, totalItems });
+	} catch (error) {
+		console.error("Error fetching item price:", error);
+		res.status(500).json({ success: false, message: "Internal Server Error" });
 	}
 };

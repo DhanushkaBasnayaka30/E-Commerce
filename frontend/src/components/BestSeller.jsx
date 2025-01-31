@@ -16,6 +16,7 @@ useEffect(() => {
       if (response && response.data) {
      
         setbestSeller(response.data.result);
+        console.log(response.data.result);
         // setProductItems(response.data.result);
       }
     } catch (error) {

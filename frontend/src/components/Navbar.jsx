@@ -4,8 +4,9 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import SearchBar from "./SearchBar";
 import { ShopContext } from "../context/ShopContext";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logoutFun, setLoginValue } from "../Redux/Slices/UserSlice";
+import { selectItems } from "../Redux/Slices/CartSlice";
 
 const navDetails = [
 	{
@@ -72,6 +73,12 @@ function Navbar() {
 			}
 		}
 	};
+
+const CartItems = useSelector(selectItems);
+const totalQuantity = CartItems.reduce((sum, item) => {
+  return sum + item.sizes.reduce((sizeSum, size) => sizeSum + size.quantity, 0);
+}, 0);
+console.log(totalQuantity);
 
 	return (
 		<>
@@ -144,7 +151,7 @@ function Navbar() {
 								<img src={assets.cart_icon} alt="" className="w-6 h-6" />
 
 								<span className="absolute w-4 flex justify-center items-center h-4 text-white leading-4  right-[-10px] bottom-[-8px] bg-gray-700 text-xs rounded-full">
-									{itemCount} {/* Call the function */}
+									{totalQuantity} {/* Call the function */}
 								</span>
 							</Link>
 						</div>

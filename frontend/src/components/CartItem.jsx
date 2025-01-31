@@ -9,7 +9,7 @@ import { Player } from "@lottiefiles/react-lottie-player";
 import { selectmobile } from "../Redux/Slices/UserSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {  decreaseQuantity, increaseQuantity, removeItem, selectItems } from "../Redux/Slices/CartSlice";
+import {  decreaseQuantity, increaseQuantity, removeItem, selectItems, updateCount } from "../Redux/Slices/CartSlice";
 
 function CartItem() {
 	// Destructure context values
@@ -20,7 +20,7 @@ function CartItem() {
 	const mobileno = useSelector(selectmobile);
 	const navigate = useNavigate();
 	const [cartItems, setNewCartItem] = useState([]);
-const dispatch = useDispatch();
+	const dispatch = useDispatch();
 	const items = useSelector(selectItems);
 
 	
@@ -124,7 +124,10 @@ const dispatch = useDispatch();
 											<p>{product.quantity}</p>
 											<button
 												className="px-1 py-1 border border-black rounded-sm"
-												onClick={() => dispatch(increaseQuantity({ itemId: item.itemId, size: product.size }))}>
+												onClick={() => {
+													
+													dispatch(updateCount())
+													dispatch(increaseQuantity({ itemId: item.itemId, size: product.size }))}}>
 												<IoMdAdd  className="text-xs" />
 											</button>
 										</div>
@@ -135,7 +138,9 @@ const dispatch = useDispatch();
 								<div className="sm:w-1/4 w-1/6 flex items-center justify-center">
 									<ImBin
 										className="w-5 h-5 text-black cursor-pointer hover:scale-110"
-										onClick={() => dispatch(removeItem({ itemId: item.itemId, size: product.size }))}
+										onClick={() => {
+											
+											dispatch(removeItem({ itemId: item.itemId, size: product.size }))}}
 									/>
 								</div>
 							</div>

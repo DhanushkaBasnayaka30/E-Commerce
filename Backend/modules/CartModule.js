@@ -20,4 +20,4 @@ const CartSchema = new mongoose.Schema({
  
 });
 
-export default mongoose.model('carts', CartSchema);
+export default mongoose.model('orders', CartSchema);

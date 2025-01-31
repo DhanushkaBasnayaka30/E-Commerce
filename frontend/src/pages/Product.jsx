@@ -69,7 +69,7 @@ function Product() {
 		if (size) {
 			console.log(id,size,quantity);
 			dispatch(addItem({ itemId: id, size: size, quantity: quantity }))
-		
+			toast.success("Your item successfully added");
 			}
 		 else {
 			toast.warn("please choose your size");

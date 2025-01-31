@@ -23,6 +23,8 @@ function Collection() {
 		const fetchData = async () => {
 			try {
 				const response = await axios.get("http://localhost:8090/api/get-items",{withCredentials:true});
+
+				console.log(response);
 				if (response && response.data) {
 					setProducts(response.data.result);
 					setLoading(true);
