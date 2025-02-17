@@ -28,10 +28,10 @@ function Home() {
 				}`}>
 				<BestSeller />
 			</div>
-			<div>
+			<div className="">
 				<OurPolicy />
 			</div>
-			<div className="mt-4">
+			<div className="mt-4 ">
 				<NewsLatter />
 			</div>
 		</div>

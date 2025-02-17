@@ -68,7 +68,7 @@ function About() {
 					</div>
 
 					<div className="w-full flex-col md:grid-cols-3 md:grid flex md:w-[80%] md:mx-auto md:mt-12 text-sm lg:text-base md:gap-x-8 md:py-4 gap-6">
-						<div className="w-[95%]   h-auto  rounded-md flex flex-col mx-auto hover:shadow-md hover:text-black text-gray-700  hover:shadow-gray-400 shadow-gray-300 shadow justify-around pb-4 ">
+						<div className="w-[95%]   h-auto  rounded-md flex flex-col mx-auto hover:shadow-md hover:text-black text-gray-700  p-12 hover:shadow-gray-400 shadow-gray-300 shadow justify-around pb-4 ">
 							<h1 className="w-full text-left p-2  font-semibold">
 								Quality Assurance:
 							</h1>

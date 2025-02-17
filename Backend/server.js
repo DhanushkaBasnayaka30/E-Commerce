@@ -27,7 +27,7 @@ if (!mongoURL) {
 // CORS configuration to allow credentials
 app.use(
   cors({
-    origin: "http://localhost:5178", // Replace with your frontend URL
+    origin: ["http://localhost:5178","https://ecommerce-54e07.web.app/","https://ecommerce-54e07.firebaseapp.com"], // Replace with your frontend URL
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true, // Allow cookies to be sent with requests

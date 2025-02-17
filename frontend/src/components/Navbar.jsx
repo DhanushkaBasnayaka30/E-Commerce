@@ -133,9 +133,10 @@ console.log(totalQuantity);
 									</p>
 									<p
 										className="cursor-pointer hover:text-black font-semibold"
-										onClick={() => navigate("admin/dashboard")}>
+										>
 										Admin
 									</p>
+									{/* onClick={() => navigate("admin/dashboard")} */}
 									<p
 										className="cursor-pointer hover:text-black font-semibold"
 										onClick={() => {
