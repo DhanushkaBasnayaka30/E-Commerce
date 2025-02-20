@@ -9,21 +9,21 @@ function LatestCollection() {
 
 
   useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response = await axios.get("http://localhost:8090/api/get-items",{withCredentials:true});
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://ec2-18-163-68-87.ap-east-1.compute.amazonaws.com/api/api/get-items", { withCredentials: true });
         console.log(response);
-				if (response && response.data) {
+        if (response && response.data) {
           console.log(response.data.result.slice(0, 10));
-					setLatestCollection(response.data.result.slice(0, 10));
-					// setProductItems(response.data.result);
-				}
-			} catch (error) {
-				console.log(error);
-			}
-		};
-		fetchData();
-	}, []);
+          setLatestCollection(response.data.result.slice(0, 10));
+          // setProductItems(response.data.result);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
   return (
     <div className="my-10">
       <div className="text-center py-8 text-3xl sm:mt-24" data-aos="zoom-in">

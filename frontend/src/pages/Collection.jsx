@@ -22,7 +22,7 @@ function Collection() {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await axios.get("http://localhost:8090/api/get-items",{withCredentials:true});
+				const response = await axios.get("http://ec2-18-163-68-87.ap-east-1.compute.amazonaws.com/api/api/get-items", { withCredentials: true });
 
 				console.log(response);
 				if (response && response.data) {
@@ -112,7 +112,7 @@ function Collection() {
 		sortPrice();
 	}, [sortType]);
 
-	return isLoading?(
+	return isLoading ? (
 		<>
 			<div className="w-auto  hidden top-0 sm:flex ransition-all duration-500 ">
 				<div
@@ -129,9 +129,8 @@ function Collection() {
 
 					{/* Categories Filter */}
 					<div
-						className={`border border-gray-300 pl-5 py-3 mt-6 flex flex-col  ${
-							showFilter ? "hidden" : "hidden sm:flex"
-						}`}>
+						className={`border border-gray-300 pl-5 py-3 mt-6 flex flex-col  ${showFilter ? "hidden" : "hidden sm:flex"
+							}`}>
 						<p className="mb-3 text-sm font-medium sm:text-base text-start">
 							CATEGORIES
 						</p>
@@ -156,9 +155,8 @@ function Collection() {
 
 					{/* Subcategory Filter */}
 					<div
-						className={`border border-gray-300 pl-5 py-3 my-5 ${
-							showFilter ? "" : "hidden sm:flex flex-col"
-						}`}>
+						className={`border border-gray-300 pl-5 py-3 my-5 ${showFilter ? "" : "hidden sm:flex flex-col"
+							}`}>
 						<p className="mb-3 text-sm font-medium sm:text-base text-start">
 							Subcategory
 						</p>
@@ -183,9 +181,8 @@ function Collection() {
 
 					{/* Sort By Price */}
 					<div
-						className={`py-3 my-5 ${
-							showFilter ? "" : "hidden sm:flex flex-col"
-						}`}>
+						className={`py-3 my-5 ${showFilter ? "" : "hidden sm:flex flex-col"
+							}`}>
 						<div className="flex gap-y-3 flex-col text-sm font-light text-gray-900">
 							<div className="flex justify-between mb-4 text-base sm:text-2xl">
 								<select
@@ -203,9 +200,8 @@ function Collection() {
 				</div>
 			</div>
 			<div
-				className={`flex flex-col sm:flex-row gap-1 sm:gap-10 border-1 transition-all duration-500 animate-fade-down animate-once animate-duration-1000 animate-delay-100 animate-ease-in-out animate-normal ${
-					showSearch ? "pt-48 pb-48" : "pt-12 pb-24 "
-				} sm:pt-24 sm:pb-8`}
+				className={`flex flex-col sm:flex-row gap-1 sm:gap-10 border-1 transition-all duration-500 animate-fade-down animate-once animate-duration-1000 animate-delay-100 animate-ease-in-out animate-normal ${showSearch ? "pt-48 pb-48" : "pt-12 pb-24 "
+					} sm:pt-24 sm:pb-8`}
 				style={{
 					paddingTop: showSearch ? "4rem" : "0rem",
 					paddingBottom: showSearch ? "6rem" : "0rem",
@@ -214,9 +210,8 @@ function Collection() {
 
 				{/* RightSide */}
 				<div
-					className={`flex-1 sm:ml-64 ${
-						showSearch ? "mt-8 sm:mt-32" : "sm:mt-20 mt-12"
-					}`}>
+					className={`flex-1 sm:ml-64 ${showSearch ? "mt-8 sm:mt-32" : "sm:mt-20 mt-12"
+						}`}>
 					<div className="flex justify-center sm:justify-start mb-4 text-2xl sm:text-2xl">
 						<Title text1={"ALL"} text2={"COLLECTION"} />
 					</div>
@@ -239,9 +234,8 @@ function Collection() {
 								</div>
 
 								<div
-									className={`  w-1/2 flex items-center justify-center ${
-										showFilter ? "" : ""
-									}`}>
+									className={`  w-1/2 flex items-center justify-center ${showFilter ? "" : ""
+										}`}>
 									<div className="flex gap-y-3 flex-col text-sm font-light text-gray-900">
 										<div className="flex justify-between  text-base sm:text-2xl">
 											<select
@@ -260,11 +254,10 @@ function Collection() {
 
 							{/* Categories Filter */}
 							<div
-								className={`border border-gray-300 pl-5 sm:py-3 sm:mt-6 flex flex-col transition-all duration-300 ${
-									showFilter
-										? "max-h-screen opacity-100"
-										: "max-h-0 opacity-0 overflow-hidden"
-								}`}>
+								className={`border border-gray-300 pl-5 sm:py-3 sm:mt-6 flex flex-col transition-all duration-300 ${showFilter
+									? "max-h-screen opacity-100"
+									: "max-h-0 opacity-0 overflow-hidden"
+									}`}>
 								<p className="mb-3 text-sm font-medium sm:text-base text-start">
 									CATEGORIES
 								</p>
@@ -290,11 +283,10 @@ function Collection() {
 
 							{/* Subcategory Filter */}
 							<div
-								className={`border border-gray-300 pl-5 py-3 sm:my-5 flex flex-col transition-all duration-300 ${
-									showFilter
-										? "max-h-screen opacity-100"
-										: "max-h-0 opacity-0 overflow-hidden"
-								}`}>
+								className={`border border-gray-300 pl-5 py-3 sm:my-5 flex flex-col transition-all duration-300 ${showFilter
+									? "max-h-screen opacity-100"
+									: "max-h-0 opacity-0 overflow-hidden"
+									}`}>
 								<p className="mb-3 text-sm font-medium sm:text-base text-start">
 									Subcategory
 								</p>
@@ -334,10 +326,10 @@ function Collection() {
 				</div>
 			</div>
 		</>
-	):(
+	) : (
 		<div className="flex items-center justify-center h-screen">
-		<Player autoplay loop src={loadingCom} style={{ height: '300px', width: '300px' }} />
-	</div>
+			<Player autoplay loop src={loadingCom} style={{ height: '300px', width: '300px' }} />
+		</div>
 	)
 }
 

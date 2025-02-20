@@ -88,10 +88,10 @@ function Registration() {
 		console.log(data);
 		try {
 			const response = await axios.post(
-				"http://localhost:8090/api/user/registration",
+				"http://ec2-18-163-68-87.ap-east-1.compute.amazonaws.com/api/api/user/registration",
 				data
 			);
-			
+
 
 			if (response.status >= 200 && response.status < 300) {
 				navigate("/login");

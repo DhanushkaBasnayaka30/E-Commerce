@@ -8,8 +8,8 @@ import { setLoginValue } from "../Redux/Slices/UserSlice";
 
 
 function Login() {
-	
-const dispatch = useDispatch();
+
+	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const [data, setData] = useState({
 		mobile: "",
@@ -57,30 +57,30 @@ const dispatch = useDispatch();
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-	
+
 		// Check for client-side validation errors
 		if (error.mobile_error || error.password_error) {
 			alert("Please fix the errors in the form.");
 			return;
 		}
-	
+
 		if (!data.mobile || !data.password) {
 			alert("Please fill in all fields.");
 			return;
 		}
-	
+
 		// Prepare request data
 		const req_data = {
 			mobile: data.mobile,
 			password: data.password,
 		};
-	
+
 		try {
 			// Make API request
-			const response = await axios.post("http://localhost:8090/api/user/login", req_data,{withCredentials:true});
-	
+			const response = await axios.post("http://ec2-18-163-68-87.ap-east-1.compute.amazonaws.com/api/api/user/login", req_data, { withCredentials: true });
+
 			console.log(response.data.token);
-		
+
 
 			// Handle successful login
 			if (response.data.Login) {

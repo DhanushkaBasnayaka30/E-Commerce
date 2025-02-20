@@ -9,7 +9,7 @@ import { Player } from "@lottiefiles/react-lottie-player";
 import { selectmobile } from "../Redux/Slices/UserSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {  decreaseQuantity, increaseQuantity, removeItem, selectItems, updateCount } from "../Redux/Slices/CartSlice";
+import { decreaseQuantity, increaseQuantity, removeItem, selectItems, updateCount } from "../Redux/Slices/CartSlice";
 
 function CartItem() {
 	// Destructure context values
@@ -23,13 +23,13 @@ function CartItem() {
 	const dispatch = useDispatch();
 	const items = useSelector(selectItems);
 
-	
+
 	useEffect(() => {
 		setNewCartItem(items);
 	}, [items]);
 
 	console.log(items);
-	
+
 	// Scroll to the top on component mount
 	useEffect(() => {
 		window.scrollTo(0, 0);
@@ -42,7 +42,7 @@ function CartItem() {
 			try {
 				// Fetch products
 				const productResponse = await axios.get(
-					"http://localhost:8090/api/get-items",
+					"http://ec2-18-163-68-87.ap-east-1.compute.amazonaws.com/api/api/get-items",
 					{ withCredentials: true }
 				);
 				const fetchedProducts = productResponse?.data?.result || [];
@@ -117,7 +117,7 @@ function CartItem() {
 										<div className="w-full h-auto flex gap-x-3 mt-2">
 											<button
 												className="px-1 py-1 border border-black rounded-sm"
-												onClick={() => dispatch(decreaseQuantity({ itemId: item.itemId, size: product.size}))}
+												onClick={() => dispatch(decreaseQuantity({ itemId: item.itemId, size: product.size }))}
 												disabled={product.quantity === 1}>
 												<IoMdRemove className="text-xs" />
 											</button>
@@ -125,10 +125,11 @@ function CartItem() {
 											<button
 												className="px-1 py-1 border border-black rounded-sm"
 												onClick={() => {
-													
+
 													dispatch(updateCount())
-													dispatch(increaseQuantity({ itemId: item.itemId, size: product.size }))}}>
-												<IoMdAdd  className="text-xs" />
+													dispatch(increaseQuantity({ itemId: item.itemId, size: product.size }))
+												}}>
+												<IoMdAdd className="text-xs" />
 											</button>
 										</div>
 									</div>
@@ -139,8 +140,9 @@ function CartItem() {
 									<ImBin
 										className="w-5 h-5 text-black cursor-pointer hover:scale-110"
 										onClick={() => {
-											
-											dispatch(removeItem({ itemId: item.itemId, size: product.size }))}}
+
+											dispatch(removeItem({ itemId: item.itemId, size: product.size }))
+										}}
 									/>
 								</div>
 							</div>

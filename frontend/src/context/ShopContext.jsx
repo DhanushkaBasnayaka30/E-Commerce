@@ -1,4 +1,4 @@
-import  { createContext, useState, useMemo, useEffect } from "react";
+import { createContext, useState, useMemo, useEffect } from "react";
 import axios from "axios"; // Import axios if not already
 import { toast } from "react-toastify";
 export const ShopContext = createContext();
@@ -12,13 +12,13 @@ const ShopContextProvider = (props) => {
 	const [visible, setVisible] = useState(false);
 	const [cartItem, setCartItems] = useState({});
 	const [itemCount, setItemCount] = useState(0);
-	const[mobileNumber,setMobileNumber] =useState();
+	const [mobileNumber, setMobileNumber] = useState();
 
 	// Fetch product data from API
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await axios.get("http://localhost:8090/api/get-items");
+				const response = await axios.get("http://ec2-18-163-68-87.ap-east-1.compute.amazonaws.com/api/api/get-items");
 				if (response && response.data) {
 					setProducts(response.data.result);
 				}
@@ -63,7 +63,7 @@ const ShopContextProvider = (props) => {
 
 	// Calculate total item count in the cart
 	const fetchItemCount = () => {
-		return Object.values(cartItem).reduce((count, sizes) => 
+		return Object.values(cartItem).reduce((count, sizes) =>
 			count + Object.values(sizes).reduce((sum, qty) => sum + qty, 0), 0);
 	};
 
@@ -95,21 +95,21 @@ const ShopContextProvider = (props) => {
 			);
 		}, 0);
 	};
-  const validateMobileNumber = (number) => {
-    // Assuming a Sri Lankan mobile number format (starts with 07 followed by 8 digits)
-    const phoneRegex = /^07\d{8}$/;
-    return phoneRegex.test(number);
-  };
+	const validateMobileNumber = (number) => {
+		// Assuming a Sri Lankan mobile number format (starts with 07 followed by 8 digits)
+		const phoneRegex = /^07\d{8}$/;
+		return phoneRegex.test(number);
+	};
 
 	const handleMobileChange = (number) => {
-  
-    setMobileNumber(number);
 
-    // Validate the mobile number
-    if (!validateMobileNumber(value)) {
-      console.log("Invalid mobile number");
-    }
-  };
+		setMobileNumber(number);
+
+		// Validate the mobile number
+		if (!validateMobileNumber(value)) {
+			console.log("Invalid mobile number");
+		}
+	};
 	// Memoize the value object to avoid unnecessary re-renders
 	const value = useMemo(() => ({
 		products,

@@ -50,7 +50,7 @@ function Navbar() {
 	const logout = async () => {
 		try {
 			const response = await axios.post(
-				"http://localhost:8090/api/user/logout",
+				"http://ec2-18-163-68-87.ap-east-1.compute.amazonaws.com/api/api/user/logout",
 				{},
 				{ withCredentials: true }
 			);
@@ -74,11 +74,11 @@ function Navbar() {
 		}
 	};
 
-const CartItems = useSelector(selectItems);
-const totalQuantity = CartItems.reduce((sum, item) => {
-  return sum + item.sizes.reduce((sizeSum, size) => sizeSum + size.quantity, 0);
-}, 0);
-console.log(totalQuantity);
+	const CartItems = useSelector(selectItems);
+	const totalQuantity = CartItems.reduce((sum, item) => {
+		return sum + item.sizes.reduce((sizeSum, size) => sizeSum + size.quantity, 0);
+	}, 0);
+	console.log(totalQuantity);
 
 	return (
 		<>
@@ -98,11 +98,10 @@ console.log(totalQuantity);
 									className="flex flex-col items-center">
 									<p>{item.title}</p>
 									<hr
-										className={`${
-											item.id === "5"
-												? "text-sm "
-												: "w-2/4 border-none h-[1.9px] bg-gray-900 hidden"
-										}`}
+										className={`${item.id === "5"
+											? "text-sm "
+											: "w-2/4 border-none h-[1.9px] bg-gray-900 hidden"
+											}`}
 									/>
 								</NavLink>
 							))}
@@ -133,7 +132,7 @@ console.log(totalQuantity);
 									</p>
 									<p
 										className="cursor-pointer hover:text-black font-semibold"
-										>
+									>
 										Admin
 									</p>
 									{/* onClick={() => navigate("admin/dashboard")} */}
@@ -167,9 +166,8 @@ console.log(totalQuantity);
 					</div>
 					{/* mobile sidebar */}
 					<div
-						className={`  absolute top-0 right-0 overflow-hidden bg-white h-screen transition-all duration-600 ${
-							visible ? " w-full" : "w-0"
-						}`}>
+						className={`  absolute top-0 right-0 overflow-hidden bg-white h-screen transition-all duration-600 ${visible ? " w-full" : "w-0"
+							}`}>
 						<div className="flex flex-col ">
 							<div
 								className="flex items-center gap-4 p-3 cursor-pointer"

@@ -45,7 +45,7 @@ function Product() {
 		const fetchData = async () => {
 			try {
 				const response = await axios.post(
-					`http://localhost:8090/api/get-item/${id}`,{},{withCredentials:true}
+					`http://ec2-18-163-68-87.ap-east-1.compute.amazonaws.com/api/api/get-item/${id}`, {}, { withCredentials: true }
 				);
 
 				if (response) {
@@ -67,11 +67,11 @@ function Product() {
 	const addToCart = async (id, size, quantity) => {
 		// console.log(id, size,quantity);
 		if (size) {
-			console.log(id,size,quantity);
+			console.log(id, size, quantity);
 			dispatch(addItem({ itemId: id, size: size, quantity: quantity }))
 			toast.success("Your item successfully added");
-			}
-		 else {
+		}
+		else {
 			toast.warn("please choose your size");
 		}
 	};
@@ -83,7 +83,7 @@ function Product() {
 	// 	if (size) {
 	// 		try {
 	// 			const response = await axios.post(
-	// 				`http://localhost:8090/api/cart/add/${mobileno}`,
+	// 				`http://ec2-18-163-68-87.ap-east-1.compute.amazonaws.com/api/api/cart/add/${mobileno}`,
 	// 				{ id, size, quantity },{withCredentials:true}
 	// 			);
 	// 			if (response) {
@@ -159,11 +159,10 @@ function Product() {
 								<span
 									key={index}
 									onClick={() => setSelectedSize(item)} // Set the clicked size as selected
-									className={`w-auto px-4 py-2 text-lmd cursor-pointer border bg-gray-200 ${
-										selectedSize === item
-											? "border-orange-500"
-											: "border-gray-300"
-									} transition-colors duration-300`}>
+									className={`w-auto px-4 py-2 text-lmd cursor-pointer border bg-gray-200 ${selectedSize === item
+										? "border-orange-500"
+										: "border-gray-300"
+										} transition-colors duration-300`}>
 									{item}
 								</span>
 							))}
@@ -191,16 +190,14 @@ function Product() {
 			<div className="w-full h-auto mt-20 text-sm gap-x-1 border-gray-300 border p">
 				<div className="items-center justify-start flex text-gra-800 ">
 					<p
-						className={`px-4 py-2 bg-gray-200 border border-gray-300 cursor-pointer ${
-							!isReveiw ? "text-black" : "text-gray-400"
-						}`}
+						className={`px-4 py-2 bg-gray-200 border border-gray-300 cursor-pointer ${!isReveiw ? "text-black" : "text-gray-400"
+							}`}
 						onClick={() => setReivew(false)}>
 						Description
 					</p>
 					<p
-						className={`px-4 py-2 bg-gray-200 border border-gray-300 cursor-pointer ${
-							isReveiw ? "text-black" : "text-gray-400"
-						}`}
+						className={`px-4 py-2 bg-gray-200 border border-gray-300 cursor-pointer ${isReveiw ? "text-black" : "text-gray-400"
+							}`}
 						onClick={() => setReivew(true)}>
 						Reviews
 					</p>
@@ -208,11 +205,10 @@ function Product() {
 
 				{/* Description */}
 				<div
-					className={`${
-						!isReveiw
-							? "w-full mt-4 text-sm gap-y-2 flex flex-col px-4 py-4 animate-fade-down animate-once animate-duration-500 animate-delay-100 animate-ease-linear animate-normal"
-							: "hidden"
-					}`}>
+					className={`${!isReveiw
+						? "w-full mt-4 text-sm gap-y-2 flex flex-col px-4 py-4 animate-fade-down animate-once animate-duration-500 animate-delay-100 animate-ease-linear animate-normal"
+						: "hidden"
+						}`}>
 					<p className="text-gray-700 text-left leading-5 lg:text-md">
 						An e-commerce website is an online platform that facilitates the
 						buying and selling of products or services over the internet. It
@@ -230,11 +226,10 @@ function Product() {
 
 				{/* Review */}
 				<div
-					className={`${
-						isReveiw
-							? "flex flex-col w-full h-auto animate-fade-down animate-once animate-duration-500 animate-delay-100 animate-ease-linear animate-normal"
-							: "hidden"
-					}`}>
+					className={`${isReveiw
+						? "flex flex-col w-full h-auto animate-fade-down animate-once animate-duration-500 animate-delay-100 animate-ease-linear animate-normal"
+						: "hidden"
+						}`}>
 					{/* Review content */}
 					<div className="flex flex-col w-full sm:w-[60%] gap-y-6 ml-4 mt-6 ">
 						{previousComments.map((item, index) => (

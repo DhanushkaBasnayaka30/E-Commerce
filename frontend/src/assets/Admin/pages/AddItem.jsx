@@ -26,7 +26,7 @@ function AddItem() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const formData = new FormData();
     formData.append('_id', id);
     formData.append('name', name);
@@ -36,19 +36,19 @@ function AddItem() {
     formData.append('subCategory', subCategory);
     formData.append('sizes', selectedSizes); // Ensure selectedSizes is a string if needed
     formData.append('bestseller', bestSeller); // If needed
-  
+
     // Append multiple images
     images.forEach((image) => {
-      formData.append('images', image); 
+      formData.append('images', image);
     });
-  
+
     try {
-      const response = await axios.post("http://localhost:8090/api/add-item", formData, {
+      const response = await axios.post("http://ec2-18-163-68-87.ap-east-1.compute.amazonaws.com/api/api/add-item", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      
+
       if (response) {
         console.log('Response:', response.data);
       }
@@ -57,14 +57,14 @@ function AddItem() {
       // Handle error UI feedback here
     }
   };
-  
+
 
   return (
     <div className="p-6 max-w-2xl mx-auto bg-white shadow-md rounded-lg">
       <h2 className="text-2xl font-semibold mb-6">Add New Item</h2>
-      
+
       <form onSubmit={handleSubmit}>
-        
+
         {/* Image Upload */}
         <label className="block mb-2 text-gray-700 font-medium">Upload Images (up to 4)</label>
         <input
@@ -74,7 +74,7 @@ function AddItem() {
           onChange={handleImageChange}
           className="mb-4 p-2 border rounded w-full"
         />
-        
+
         {/* Preview Images */}
         <div className="grid grid-cols-2 gap-2 mb-4">
           {images.map((img, index) => (
@@ -105,7 +105,7 @@ function AddItem() {
         {/* Sizes */}
         <label className="block mb-2 text-gray-700 font-medium">Sizes</label>
         <div className="flex space-x-4 mb-4">
-          {['S', 'M', 'L','XL','2XL'].map((size) => (
+          {['S', 'M', 'L', 'XL', '2XL'].map((size) => (
             <label key={size} className="flex items-center">
               <input
                 type="checkbox"
