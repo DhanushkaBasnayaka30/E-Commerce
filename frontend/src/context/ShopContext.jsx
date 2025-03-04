@@ -18,7 +18,7 @@ const ShopContextProvider = (props) => {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await axios.get("http://ec2-18-163-68-87.ap-east-1.compute.amazonaws.com/api/api/get-items");
+				const response = await axios.get("http://localhost:8090/api/get-items");
 				if (response && response.data) {
 					setProducts(response.data.result);
 				}

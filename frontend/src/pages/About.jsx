@@ -23,7 +23,7 @@ function About() {
 					<Title text1={"ABOUT"} text2={"US"} />
 				</h1>
 				{/* main */}
-				<div className=" w-full h-auto flex flex-col md:flex-row md:mt-12 md:gap-x-4 items-start justify-center">
+				<div className="sm:mt-4 w-full h-auto flex flex-col md:flex-row md:mt-12 md:gap-x-4 items-start justify-center">
 					{/* image */}
 					<div className=" w-full h-[350px] md:h-[500px] ">
 						<img

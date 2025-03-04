@@ -12,6 +12,8 @@ import { useNavigate } from "react-router-dom";
 import { decreaseQuantity, increaseQuantity, removeItem, selectItems, updateCount } from "../Redux/Slices/CartSlice";
 
 function CartItem() {
+	const APP_URL = import.meta.env.VITE_APP_URL;
+
 	// Destructure context values
 	const { currency, updateQuantity } = useContext(ShopContext);
 	// const [cartItems, setCartItems] = useState([]);
@@ -42,7 +44,7 @@ function CartItem() {
 			try {
 				// Fetch products
 				const productResponse = await axios.get(
-					"http://ec2-18-163-68-87.ap-east-1.compute.amazonaws.com/api/api/get-items",
+					"http://localhost:8090/api/get-items",
 					{ withCredentials: true }
 				);
 				const fetchedProducts = productResponse?.data?.result || [];

@@ -43,7 +43,7 @@ function AddItem() {
     });
 
     try {
-      const response = await axios.post("http://ec2-18-163-68-87.ap-east-1.compute.amazonaws.com/api/api/add-item", formData, {
+      const response = await axios.post("http://localhost:8090/api/add-item", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

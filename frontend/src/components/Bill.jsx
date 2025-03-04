@@ -11,6 +11,8 @@ import axios from "axios";
 import { use } from "react";
 
 function Bill() {
+	const APP_URL = import.meta.env.VITE_APP_URL;
+
 	const cartItems = useSelector(selectItems);
 	const navigate = useNavigate();
 	const orderIdies = cartItems.map((item) => item.itemId);
@@ -33,7 +35,7 @@ function Bill() {
 	useEffect(() => {
 		const fetchData = async () => {
 			const response = await axios.post(
-				"http://ec2-18-163-68-87.ap-east-1.compute.amazonaws.com/api/api/get-itemPrices",
+			`${APP_URL}/get-itemPrices`,
 				{ result },
 				{ withCredentials: true }
 			);

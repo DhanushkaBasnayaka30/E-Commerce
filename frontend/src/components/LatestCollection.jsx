@@ -4,6 +4,8 @@ import Title from './Title';
 import ProductItems from './ProductItems';
 import axios from "axios";
 function LatestCollection() {
+  const APP_URL = import.meta.env.VITE_APP_URL;
+
   const { products } = useContext(ShopContext);
   const [latestCollection, setLatestCollection] = useState([]);
 
@@ -11,7 +13,7 @@ function LatestCollection() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://ec2-18-163-68-87.ap-east-1.compute.amazonaws.com/api/api/get-items", { withCredentials: true });
+        const response = await axios.get(`${APP_URL}/get-items`, { withCredentials: true });
         console.log(response);
         if (response && response.data) {
           console.log(response.data.result.slice(0, 10));

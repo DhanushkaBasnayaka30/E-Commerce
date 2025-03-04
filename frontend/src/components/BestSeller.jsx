@@ -6,13 +6,15 @@ import ProductItems from './ProductItems';
 import axios from 'axios';
 
 function BestSeller() {
+  const APP_URL = import.meta.env.VITE_APP_URL;
+
   const { products } = useContext(ShopContext);
   const [bestSeller, setbestSeller] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://ec2-18-163-68-87.ap-east-1.compute.amazonaws.com/api/api/best-seller");
+        const response = await axios.get(`${APP_URL}/best-seller`);
         if (response && response.data) {
 
           setbestSeller(response.data.result);

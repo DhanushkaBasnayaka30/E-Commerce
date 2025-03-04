@@ -11,7 +11,7 @@ function Home() {
 	});
 
 	return (
-		<div className="sm:pt-28 pt-16 -28 mt-1 px-2">
+		<div className="sm:pt-28 pt-16 -28 mt-1 px-3">
 			<div className=" " data-aos="zoom-in">
 				<Hero />
 			</div>

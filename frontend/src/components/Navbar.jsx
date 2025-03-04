@@ -32,6 +32,8 @@ const navDetails = [
 ];
 console.log(navDetails);
 function Navbar() {
+	const APP_URL = import.meta.env.VITE_APP_URL;
+
 	const [visible, setVisible] = useState(false);
 
 	const {
@@ -50,7 +52,7 @@ function Navbar() {
 	const logout = async () => {
 		try {
 			const response = await axios.post(
-				"http://ec2-18-163-68-87.ap-east-1.compute.amazonaws.com/api/api/user/logout",
+				`${APP_URL}/user/logout`,
 				{},
 				{ withCredentials: true }
 			);
@@ -84,10 +86,10 @@ function Navbar() {
 		<>
 			<div className="sm:left-[5%] mx-auto flex justify-between py-5 font-medium sm:w-[90%] w-full  fixed z-50  bg-white top-0 flex-col px-2">
 				<div className=" flex bg-white justify-between ">
-					<div className="animate-bounce animate-infinite animate-ease-in-out animate-normal">
+					<Link to="/" className="">
 						{/* brandlogo */}
 						<img src={assets.logo} alt="" className="w-36" />
-					</div>
+					</Link>
 					{/* center */}
 					<div className=" items-center justify-center sm:flex hidden ">
 						<ul className="flex gap-x-8 ">
@@ -170,15 +172,16 @@ function Navbar() {
 							}`}>
 						<div className="flex flex-col ">
 							<div
-								className="flex items-center gap-4 p-3 cursor-pointer"
-								onClick={() => setVisible(false)}>
+								className="flex items-center gap-4 p-3 "
+							>
 								<img
+									onClick={() => setVisible(false)}
 									src={assets.dropdown_icon}
-									className="h-4 rotate-180"
+									className="h-4 rotate-180 cursor-pointer "
 									alt=""
 								/>
 
-								<p className="text-gray-600 hover:text-gray-900">Back</p>
+								<p onClick={() => setVisible(false)} className="cursor-pointer text-gray-600 hover:text-gray-900">Back</p>
 							</div>
 
 							<div className="flex flex-col  gap-y-4">

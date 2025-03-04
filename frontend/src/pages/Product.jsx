@@ -13,6 +13,8 @@ import { selectmobile } from "../Redux/Slices/UserSlice";
 import { toast } from "react-toastify";
 import { addItem } from "../Redux/Slices/CartSlice";
 function Product() {
+	const APP_URL = import.meta.env.VITE_APP_URL;
+
 	const previousComments = [
 		"This T-shirt is incredibly comfortable! The pure cotton material feels soft against the skin, making it perfect for all-day wear.",
 		"I love the quality of this T-shirt! It's well-made and has held up beautifully after several washes.",
@@ -45,7 +47,7 @@ function Product() {
 		const fetchData = async () => {
 			try {
 				const response = await axios.post(
-					`http://ec2-18-163-68-87.ap-east-1.compute.amazonaws.com/api/api/get-item/${id}`, {}, { withCredentials: true }
+					`${APP_URL}/get-item/${id}`, {}, { withCredentials: true }
 				);
 
 				if (response) {
@@ -83,7 +85,7 @@ function Product() {
 	// 	if (size) {
 	// 		try {
 	// 			const response = await axios.post(
-	// 				`http://ec2-18-163-68-87.ap-east-1.compute.amazonaws.com/api/api/cart/add/${mobileno}`,
+	// 				`http://localhost:8090/api/cart/add/${mobileno}`,
 	// 				{ id, size, quantity },{withCredentials:true}
 	// 			);
 	// 			if (response) {

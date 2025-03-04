@@ -4,6 +4,7 @@ import ProductItems from './ProductItems';
 import axios from 'axios';
 
 function RleatedProduct({ category, subCategory }) {
+  const APP_URL = import.meta.env.VITE_APP_URL;
 
   // const {products}= useContext(ShopContext);
   const [products, setProducts] = useState([]);
@@ -12,7 +13,7 @@ function RleatedProduct({ category, subCategory }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://ec2-18-163-68-87.ap-east-1.compute.amazonaws.com/api/api/get-items");
+        const response = await axios.get(`${APP_URL}/api/get-items`);
         if (response && response.data) {
           setProducts(response.data.result);
 

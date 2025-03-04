@@ -6,6 +6,8 @@ import axios from "axios";
 import loadingCom from "../assets/square-loader.json"
 import { Player } from "@lottiefiles/react-lottie-player";
 function Collection() {
+	const APP_URL = import.meta.env.VITE_APP_URL;
+
 	// const { products } = useContext(ShopContext);
 	const [products, setProducts] = useState([]);
 	const [showFilter, setShowFilter] = useState(false);
@@ -22,7 +24,7 @@ function Collection() {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await axios.get("http://ec2-18-163-68-87.ap-east-1.compute.amazonaws.com/api/api/get-items", { withCredentials: true });
+				const response = await axios.get(`${APP_URL}/get-items`, { withCredentials: true });
 
 				console.log(response);
 				if (response && response.data) {
@@ -114,7 +116,7 @@ function Collection() {
 
 	return isLoading ? (
 		<>
-			<div className="w-auto  hidden top-0 sm:flex ransition-all duration-500 ">
+			<div className="w-auto  hidden top-0 sm:flex ransition-all duration-500">
 				<div
 					className={`min-w-60 sm:fixed top-20  z-10 h-auto sm:mt-8 p-4 transition-all duration-500 animate-fade-down animate-once animate-duration-1000 animate-delay-100 animate-ease-in-out animate-normal  ${showSearch} ?" b":"bg-red-400"`}
 					style={{
@@ -129,7 +131,7 @@ function Collection() {
 
 					{/* Categories Filter */}
 					<div
-						className={`border border-gray-300 pl-5 py-3 mt-6 flex flex-col  ${showFilter ? "hidden" : "hidden sm:flex"
+						className={` border-gray-300 pl-5 py-3 mt-6 flex flex-col  ${showFilter ? "hidden" : "hidden sm:flex"
 							}`}>
 						<p className="mb-3 text-sm font-medium sm:text-base text-start">
 							CATEGORIES
@@ -219,7 +221,7 @@ function Collection() {
 
 					<div className="w-auto top-0 sm:hidden">
 						<div className="min-w-60 sm:fixed top-2 z-10 h-auto  ">
-							<div className="border flex w-full justify-start gap-x-1items-center px-2 py-1  cursor-pointer ">
+							<div className=" flex w-full justify-start gap-x-1items-center px-2 py-1  cursor-pointer ">
 								<div
 									className="flex items-center border px-4 rounded border-gray-700 gap-x-2 justify-center "
 									onClick={() => setShowFilter(!showFilter)}>
@@ -325,6 +327,7 @@ function Collection() {
 					</div>
 				</div>
 			</div>
+			<div className="md:mt-24 mt-0 w-full"></div>
 		</>
 	) : (
 		<div className="flex items-center justify-center h-screen">

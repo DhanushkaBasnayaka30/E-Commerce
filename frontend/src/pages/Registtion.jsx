@@ -8,6 +8,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 function Registration() {
+	const APP_URL = import.meta.env.VITE_APP_URL;
+
 	const navigate = useNavigate();
 	const [data, setData] = useState({
 		name: "",
@@ -88,7 +90,7 @@ function Registration() {
 		console.log(data);
 		try {
 			const response = await axios.post(
-				"http://ec2-18-163-68-87.ap-east-1.compute.amazonaws.com/api/api/user/registration",
+			`${APP_URL}/api/user/registration`,
 				data
 			);
 

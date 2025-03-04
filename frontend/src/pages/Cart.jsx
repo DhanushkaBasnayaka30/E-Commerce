@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { selectmobile } from "../Redux/Slices/UserSlice";
 
 function Cart() {
+	
 	const mobile = useSelector(selectmobile);
 
 

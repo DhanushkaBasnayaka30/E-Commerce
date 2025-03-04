@@ -8,6 +8,7 @@ import { setLoginValue } from "../Redux/Slices/UserSlice";
 
 
 function Login() {
+	const APP_URL = import.meta.env.VITE_APP_URL;
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -15,6 +16,7 @@ function Login() {
 		mobile: "",
 		password: "",
 	});
+	
 	const [error, setError] = useState({
 		mobile_error: "",
 		password_error: "",
@@ -77,7 +79,7 @@ function Login() {
 
 		try {
 			// Make API request
-			const response = await axios.post("http://ec2-18-163-68-87.ap-east-1.compute.amazonaws.com/api/api/user/login", req_data, { withCredentials: true });
+			const response = await axios.post(`${APP_URL}/api/user/login`, req_data, { withCredentials: true });
 
 			console.log(response.data.token);
 
