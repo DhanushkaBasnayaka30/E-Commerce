@@ -79,7 +79,7 @@ function Login() {
 
 		try {
 			// Make API request
-			const response = await axios.post(`${APP_URL}/api/user/login`, req_data, { withCredentials: true });
+			const response = await axios.post(`${APP_URL}user/login`, req_data, { withCredentials: true });
 
 			console.log(response.data.token);
 

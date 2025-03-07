@@ -4,7 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { createClient } from "@supabase/supabase-js";
 import ItemRoute from "./routes/ItemRoutes.js";
-import CartRoute from "./routes/CartRoutes.js";
+import OrderRoute from "./routes/OrderRoute.js";
 import UserRoute from "./routes/UserRoute.js";
 import UserAuthorize from "./Authentication/Authenticationmjs";
 import cookieParser from "cookie-parser";
@@ -74,11 +74,11 @@ mongoose
 	});
 
 // Routes
-app.use("/api/run", (req, result) => {
-	return result.json({ message: "running---->" });
-});
+// app.use("/api/run", (req, result) => {
+// 	return result.json({ message: "running---->" });
+// });
 app.use("/api", ItemRoute);
-app.use("/api/cart", UserAuthorize, CartRoute);
+app.use("/api/order", UserAuthorize,OrderRoute);
 app.use("/api/user", UserRoute);
 
 export default app;

@@ -9,6 +9,7 @@ import { selectCount, selectItems } from "../Redux/Slices/CartSlice";
 import { useEffect } from "react";
 import axios from "axios";
 import { use } from "react";
+import { selectToken } from "../Redux/Slices/UserSlice";
 
 function Bill() {
 	const APP_URL = import.meta.env.VITE_APP_URL;
@@ -21,8 +22,10 @@ function Bill() {
 	const [total, setTotal] = useState(0);
 	const count = useSelector(selectCount);
 	const pathSegments = location.pathname.split('/')[1];
-	console.log("path name ---->>>", pathSegments); // Outputs each segment of the path as an array
-
+	console.log("path name ---->>>", pathSegments); 
+	const token = useSelector(selectToken)
+	console.log(token);
+	
 	const result = cartItems.map((item) => ({
 		itemId: item.itemId,
 		totalQuantity: item.sizes.reduce((sum, size) => sum + size.quantity, 0),
@@ -50,6 +53,15 @@ function Bill() {
 		}
 
 	}, [count]);
+
+	const handleNavigate = ()=>{
+		if(token){
+			navigate("/place-order")
+		}
+		else{
+			navigate("/login")
+		}
+	}
 
 	const {
 		cartItem,
@@ -91,7 +103,7 @@ function Bill() {
 				<hr />
 
 				<div className={`${pathSegments.includes("place-order") ? "hidden" : "w-full h-12 mt-2 justify-end flex"}`}>
-					<div className="2/5 sm:w-1/2 bg-gray-800 hover:bg-gray-900 h-full text-white text-center  text-xs sm:text-sm cursor-pointer flex items-center justify-center px-4 py-2" onClick={() => navigate("/place-order")} >
+					<div className="2/5 sm:w-1/2 bg-gray-800 hover:bg-gray-900 h-full text-white text-center  text-xs sm:text-sm cursor-pointer flex items-center justify-center px-4 py-2" onClick={handleNavigate} >
 						PROCEED TO CHECKOUT
 					</div>
 				</div>

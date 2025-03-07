@@ -52,7 +52,7 @@ function Navbar() {
 	const logout = async () => {
 		try {
 			const response = await axios.post(
-				`${APP_URL}/user/logout`,
+				`${APP_URL}user/logout`,
 				{},
 				{ withCredentials: true }
 			);

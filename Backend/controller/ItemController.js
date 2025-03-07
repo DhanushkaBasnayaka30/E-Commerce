@@ -1,4 +1,4 @@
-import CartModule from "../modules/CartModule.js";
+import OrderModule from "../modules/OrderModule.js";
 import ItemModule from "../modules/ItemModule.js";
 import dotenv from "dotenv";
 import { createClient } from "@supabase/supabase-js";

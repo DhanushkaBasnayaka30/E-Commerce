@@ -47,7 +47,7 @@ function Product() {
 		const fetchData = async () => {
 			try {
 				const response = await axios.post(
-					`${APP_URL}/get-item/${id}`, {}, { withCredentials: true }
+					`${APP_URL}get-item/${id}`, {}, { withCredentials: true }
 				);
 
 				if (response) {

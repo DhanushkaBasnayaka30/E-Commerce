@@ -77,7 +77,7 @@ export const LoginSlice = createSlice({
 
 export const { setLoginValue, logoutFun } = LoginSlice.actions;
 
-export const selectEmail = (state) => state.loginslice.name;
+export const selectName = (state) => state.loginslice.name;
 export const selectmobile = (state) => state.loginslice.mobile;
 export const selectToken = (state) => state.loginslice.token;
 

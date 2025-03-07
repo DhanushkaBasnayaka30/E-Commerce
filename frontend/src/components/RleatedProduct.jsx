@@ -13,7 +13,7 @@ function RleatedProduct({ category, subCategory }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${APP_URL}/api/get-items`);
+        const response = await axios.get(`${APP_URL}get-items`);
         if (response && response.data) {
           setProducts(response.data.result);
 

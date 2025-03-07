@@ -40,6 +40,7 @@ export const Registration = async (req, res) => {
 };
 
 export const Login = async (req, res) => {
+	console.log("HI");
 	console.log(req.body);
 	try {
 		const { mobile, password } = req.body;
@@ -47,6 +48,7 @@ export const Login = async (req, res) => {
 
 		// Check if user exists
 		const ExistUser = await UserModule.findOne({ mobile });
+		console.log("ExistUser",ExistUser);
 		if (!ExistUser) {
 			return res.status(404).json({ message: "Cannot find this number" });
 		}
