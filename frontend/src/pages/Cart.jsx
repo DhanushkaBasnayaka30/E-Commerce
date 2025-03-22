@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { selectmobile } from "../Redux/Slices/UserSlice";
 
 function Cart() {
-	
+
 	const mobile = useSelector(selectmobile);
 
 
@@ -30,7 +30,7 @@ function Cart() {
 						<Bill />
 						<Link to="/place-order" className="w-full">
 							<div className="w-full  right-0  h-12 flex justify-end items-center mt-8 px-2 sm:px-0 ">
-								
+
 							</div>
 						</Link>
 					</div>

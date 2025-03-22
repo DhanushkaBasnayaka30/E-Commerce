@@ -10,6 +10,7 @@ import UserAuthorize from "./Authentication/Authenticationmjs";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import session from "express-session";
+import CartRoute from "./routes/CartRoutes.js";
 
 // Load environment variables
 dotenv.config();
@@ -80,5 +81,6 @@ mongoose
 app.use("/api", ItemRoute);
 app.use("/api/order", UserAuthorize,OrderRoute);
 app.use("/api/user", UserRoute);
+app.use("/api/cart", CartRoute);
 
 export default app;

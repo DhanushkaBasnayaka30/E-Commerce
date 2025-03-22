@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { assets, productImages } from "../assets/assets";
 import Title from "../components/Title";
@@ -30,6 +30,7 @@ function Product() {
 	const [selectedSize, setSelectedSize] = useState(null);
 	const [isReveiw, setReivew] = useState(false);
 	const dispatch = useDispatch();
+	const navigate = useNavigate()
 	useEffect(() => {
 		// Wait 200 milliseconds before scrolling to the top for smooth transition
 		const timer = setTimeout(() => {
@@ -66,46 +67,62 @@ function Product() {
 		fetchData();
 	}, [id]);
 
-	const addToCart = async (id, size, quantity) => {
+	const addToCart1 = async (id, size, quantity) => {
 		// console.log(id, size,quantity);
 		if (size) {
 			console.log(id, size, quantity);
 			dispatch(addItem({ itemId: id, size: size, quantity: quantity }))
-			toast.success("Your item successfully added");
+			// toast.success("Your item successfully added");
 		}
 		else {
-			toast.warn("please choose your size");
+			// toast.warn("please choose your size");
+			console.log("please choose your size in addCart1");
 		}
 	};
 
 
 
-	// const addToCart = async (id, size, quantity) => {
-	// 	console.log(id, size,quantity);
-	// 	if (size) {
-	// 		try {
-	// 			const response = await axios.post(
-	// 				`http://localhost:8090/api/cart/add/${mobileno}`,
-	// 				{ id, size, quantity },{withCredentials:true}
-	// 			);
-	// 			if (response) {
-	// 				console.log(response.data);
-	// 				toast.success("Updated your cart");
-	// 			}
-	// 		} catch (error) {
-	// 			if (error.response) {
-	// 				console.log("Error Response:", error.response.data);
-	// 				console.log("Error Status:", error.response.status);
-	// 			} else if (error.request) {
-	// 				console.log("Error Request:", error.request);
-	// 			} else {
-	// 				console.log("Error Message:", error.message);
-	// 			}
-	// 		}
-	// 	} else {
-	// 		toast.warn("please choose your size");
-	// 	}
-	// };
+	const addToCart2 = async (id, size, quantity,is_increase) => {
+		console.log("mobileNumber",mobileno);
+		if(!mobileno){
+			navigate('/login')
+		}
+		console.log(id, size, quantity);
+		if (size) {
+			try {
+				const response = await axios.post(
+					`${APP_URL}cart/add/${mobileno}`,
+					{ id, size, quantity,is_increase }, { withCredentials: true }
+				);
+				if (response) {
+					console.log(response.data);
+					toast.success("Updated your cart");
+				}
+			} catch (error) {
+				if (error.response) {
+					console.log("Error Response:", error.response.data);
+					console.log("Error Status:", error.response.status);
+				} else if (error.request) {
+					console.log("Error Request:", error.request);
+				} else {
+					console.log("Error Message:", error.message);
+				}
+			}
+		} else {
+			toast.warn("please choose your size");
+		}
+	};
+
+	const addToCart = (id, size, quantity) => {
+		try {
+
+			addToCart1(id, size, quantity)
+			addToCart2(id, size, quantity,true)
+		}
+		catch (error) {
+			console.log(error);
+		}
+	}
 	return productData ? (
 		<div className="border-t pt-10 transition-opacity ease-in duration-500 opacity-100 sm:pt-32 p-2 animate-fade-down animate-once animate-duration-1000 animate-delay-100 animate-ease-in-out animate-normal">
 			{/* product Data */}

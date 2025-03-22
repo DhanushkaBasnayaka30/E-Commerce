@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+const APP_URL = import.meta.env.VITE_APP_URL;
 
 // Helper functions for localStorage
 const loadStateFromLocalStorage = () => {
@@ -53,7 +55,10 @@ const cartSlice = createSlice({
 					sizes: [{ size, quantity }],
 				});
 			}
-			state.count = state.items.reduce((acc, item) => acc + item.sizes.reduce((sum, s) => sum + s.quantity, 0), 0);
+			state.count = state.items.reduce(
+				(acc, item) => acc + item.sizes.reduce((sum, s) => sum + s.quantity, 0),
+				0
+			);
 			saveStateToLocalStorage(state);
 		},
 		removeItem: (state, action) => {
@@ -61,7 +66,9 @@ const cartSlice = createSlice({
 			const itemIndex = state.items.findIndex((item) => item.itemId === itemId);
 
 			if (itemIndex !== -1) {
-				const sizeIndex = state.items[itemIndex].sizes.findIndex((s) => s.size === size);
+				const sizeIndex = state.items[itemIndex].sizes.findIndex(
+					(s) => s.size === size
+				);
 				if (sizeIndex !== -1) {
 					state.items[itemIndex].sizes.splice(sizeIndex, 1);
 				}
@@ -71,7 +78,10 @@ const cartSlice = createSlice({
 				}
 			}
 
-			state.count = state.items.reduce((acc, item) => acc + item.sizes.reduce((sum, s) => sum + s.quantity, 0), 0);
+			state.count = state.items.reduce(
+				(acc, item) => acc + item.sizes.reduce((sum, s) => sum + s.quantity, 0),
+				0
+			);
 			saveStateToLocalStorage(state);
 		},
 		increaseQuantity: (state, action) => {
@@ -85,7 +95,10 @@ const cartSlice = createSlice({
 				}
 			}
 
-			state.count = state.items.reduce((acc, item) => acc + item.sizes.reduce((sum, s) => sum + s.quantity, 0), 0);
+			state.count = state.items.reduce(
+				(acc, item) => acc + item.sizes.reduce((sum, s) => sum + s.quantity, 0),
+				0
+			);
 			saveStateToLocalStorage(state);
 		},
 		decreaseQuantity: (state, action) => {
@@ -97,7 +110,9 @@ const cartSlice = createSlice({
 				if (existingSize && existingSize.quantity > 1) {
 					existingSize.quantity -= 1;
 				} else {
-					existingItem.sizes = existingItem.sizes.filter((s) => s.size !== size);
+					existingItem.sizes = existingItem.sizes.filter(
+						(s) => s.size !== size
+					);
 
 					if (existingItem.sizes.length === 0) {
 						state.items = state.items.filter((item) => item.itemId !== itemId);
@@ -105,7 +120,10 @@ const cartSlice = createSlice({
 				}
 			}
 
-			state.count = state.items.reduce((acc, item) => acc + item.sizes.reduce((sum, s) => sum + s.quantity, 0), 0);
+			state.count = state.items.reduce(
+				(acc, item) => acc + item.sizes.reduce((sum, s) => sum + s.quantity, 0),
+				0
+			);
 			saveStateToLocalStorage(state);
 		},
 		clearCart: (state) => {
@@ -119,6 +137,38 @@ const cartSlice = createSlice({
 			saveStateToLocalStorage(state);
 		},
 	},
+	setCartFromDataset: (state, action) => {
+		console.log("setting data in react redux");
+		const newItems = action.payload;
+
+		newItems.forEach((newItem) => {
+			const existingItem = state.items.find(
+				(item) => item.itemId === newItem.itemId
+			);
+
+			if (existingItem) {
+				newItem.sizes.forEach((newSize) => {
+					const existingSize = existingItem.sizes.find(
+						(s) => s.size === newSize.size
+					);
+					if (existingSize) {
+						existingSize.quantity += newSize.quantity;
+					} else {
+						existingItem.sizes.push(newSize);
+					}
+				});
+			} else {
+				state.items.push(newItem);
+			}
+		});
+
+		state.count = state.items.reduce(
+			(acc, item) => acc + item.sizes.reduce((sum, s) => sum + s.quantity, 0),
+			0
+		);
+
+		saveStateToLocalStorage(state);
+	},
 });
 
 // Export the actions
@@ -130,6 +180,7 @@ export const {
 	decreaseQuantity,
 	clearCart,
 	updateCount,
+	setCartFromDataset,
 } = cartSlice.actions;
 
 export const selectItems = (state) => state.cart.items;

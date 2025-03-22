@@ -80,7 +80,7 @@ function Navbar() {
 	const totalQuantity = CartItems.reduce((sum, item) => {
 		return sum + item.sizes.reduce((sizeSum, size) => sizeSum + size.quantity, 0);
 	}, 0);
-	console.log(totalQuantity);
+	console.log("totalQuantity",totalQuantity);
 
 	return (
 		<>

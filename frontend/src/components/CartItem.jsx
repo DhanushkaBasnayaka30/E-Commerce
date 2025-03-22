@@ -9,7 +9,8 @@ import { Player } from "@lottiefiles/react-lottie-player";
 import { selectmobile } from "../Redux/Slices/UserSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { decreaseQuantity, increaseQuantity, removeItem, selectItems, updateCount } from "../Redux/Slices/CartSlice";
+import { decreaseQuantity, increaseQuantity, removeItem, selectItems, updateCount, setCartFromDataset, selectCount } from "../Redux/Slices/CartSlice";
+import { toast } from "react-toastify";
 
 function CartItem() {
 	const APP_URL = import.meta.env.VITE_APP_URL;
@@ -24,30 +25,23 @@ function CartItem() {
 	const [cartItems, setNewCartItem] = useState([]);
 	const dispatch = useDispatch();
 	const items = useSelector(selectItems);
+	const itemCount = useSelector(selectCount)
+	const [click, setClick] = useState(false)
 
+	if (!mobileno) {
+		navigate('/login')
+	}
 
-	useEffect(() => {
-		setNewCartItem(items);
-	}, [items]);
-
-	console.log(items);
-
-	// Scroll to the top on component mount
-	useEffect(() => {
-		window.scrollTo(0, 0);
-	}, []);
-
-	// Fetch products and cart items
 	useEffect(() => {
 		const fetchData = async () => {
 			setLoading(true);
 			try {
 				// Fetch products
 				const productResponse = await axios.get(
-					"http://localhost:8090/api/get-items",
+					`${APP_URL}get-items`,
 					{ withCredentials: true }
 				);
-				const fetchedProducts = productResponse?.data?.result || [];
+				const fetchedProducts = productResponse?.data?.result;
 				if (productResponse) {
 					setProducts(fetchedProducts);
 				}
@@ -61,12 +55,117 @@ function CartItem() {
 		};
 
 		fetchData();
-	}, [mobileno]);
 
-	// Rendering the cart items
+	}, [mobileno, click]);
+
+
+
+	const fetchDataFromBAckEnd = async () => {
+		try {
+			const response = await axios.post(
+				`${APP_URL}cart/getCarts/${mobileno}`, {}, { withCredentials: true }
+			);
+
+			if (response) {
+				console.log("---------------->", response.data["result"].items);
+
+
+				setNewCartItem((prevCartItems) => [...prevCartItems, ...response.data["result"].items]);
+
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+
+
+	console.log("products item count", products.length, "cartItem length -->", cartItems.length);
+
+	useEffect(() => {
+		console.log("fetching.......");
+		// setNewCartItem((prevCartItems) => [...prevCartItems, ...items]);
+		setNewCartItem(items);
+		if (cartItems.length == 0) {
+			console.log("-----length =0 ------->====", cartItems.length);
+			fetchDataFromBAckEnd()
+		}
+	}, [items,click]);
+
+	const addToCart2 = async (id, size, quantity, is_increase) => {
+
+		if (!mobileno) {
+			navigate('/login')
+		}
+		console.log(id, size, quantity);
+		if (size) {
+			try {
+				const response = await axios.post(
+					`${APP_URL}cart/add/${mobileno}`,
+					{ id, size, quantity, is_increase }, { withCredentials: true }
+				);
+				if (response) {
+					console.log(response.data);
+					toast.success("Updated your cart");
+					setClick(!click)
+				}
+			} catch (error) {
+				if (error.response) {
+					console.log("Error Response:", error.response.data);
+					console.log("Error Status:", error.response.status);
+				} else if (error.request) {
+					console.log("Error Request:", error.request);
+				} else {
+					console.log("Error Message:", error.message);
+				}
+			}
+		} else {
+			toast.warn("please choose your size");
+		}
+	};
+
+
+	// Scroll to the top on component mount
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, []);
+
+	// Fetch products and cart items
+
+
+	const Increase_Count = async (id, size, quantity) => {
+		console.log(id, size, quantity);
+		addToCart2(id, size, quantity + 1, true)
+		dispatch(increaseQuantity({ itemId: id, size: size }))
+		dispatch(updateCount())
+	}
+
+	const Descrease_Count = async (id, size, quantity) => {
+		addToCart2(id, size, quantity - 1, false)
+		dispatch(decreaseQuantity({ itemId: id, size: size }))
+		dispatch(updateCount())
+
+	}
+	console.log(cartItems);
+
+	const removeItem_from_backend = async (itemId, size) => {
+		const data = {
+			itemId: itemId,
+			size: size
+		}
+		try {
+			const response = await axios.delete(`${APP_URL}cart/remove_cart_item/${mobileno}`, { data }, { withCredentials: true })
+			if (response) {
+				console.log(response.data);
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	}
+	console.log("cart item length", cartItems);
 	return (
 		<div>
-			{isLoading ? (
+			{products.length <= 0 ? (
 				// Show a loading skeleton if data is still loading
 				<div className="flex items-center justify-center h-screen">
 					<Player
@@ -82,8 +181,8 @@ function CartItem() {
 					const productItem = products.find(
 						(productItem) => productItem._id === item.itemId
 					);
-					if (!productItem) return null; // Skip if no product found
 
+					if (!productItem) return null;
 					return item.sizes.map((product, index) => (
 						<div
 							key={`${item._id}-${product.size}-${index}`}
@@ -119,7 +218,7 @@ function CartItem() {
 										<div className="w-full h-auto flex gap-x-3 mt-2">
 											<button
 												className="px-1 py-1 border border-black rounded-sm"
-												onClick={() => dispatch(decreaseQuantity({ itemId: item.itemId, size: product.size }))}
+												onClick={() => Descrease_Count(item.itemId, product.size, product.quantity)}
 												disabled={product.quantity === 1}>
 												<IoMdRemove className="text-xs" />
 											</button>
@@ -127,9 +226,7 @@ function CartItem() {
 											<button
 												className="px-1 py-1 border border-black rounded-sm"
 												onClick={() => {
-
-													dispatch(updateCount())
-													dispatch(increaseQuantity({ itemId: item.itemId, size: product.size }))
+													Increase_Count(item.itemId, product.size, product.quantity)
 												}}>
 												<IoMdAdd className="text-xs" />
 											</button>
@@ -142,7 +239,7 @@ function CartItem() {
 									<ImBin
 										className="w-5 h-5 text-black cursor-pointer hover:scale-110"
 										onClick={() => {
-
+											removeItem_from_backend(item.itemId, product.size)
 											dispatch(removeItem({ itemId: item.itemId, size: product.size }))
 										}}
 									/>
