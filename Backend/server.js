@@ -28,18 +28,16 @@ if (!mongoURL) {
 // CORS configuration to allow credentials
 app.use(
 	cors({
-		// origin: ["http://localhost:5178","https://ecommerce-54e07.web.app/","https://ecommerce-54e07.firebaseapp.com"], // Replace with your frontend URL
-		// Replace with your frontend URL
 		
-		origin: ["http://localhost:5178"], // Replace with your frontend URL
+		
+		origin: '*', // Replace with your frontend URL
 		methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
 		allowedHeaders: ["Content-Type", "Authorization"],
 		credentials: true, // Allow cookies to be sent with requests
 	})
 );
 
-// "http://ec2-18-163-68-87.ap-east-1.compute.amazonaws.com"
-// Middleware setup
+
 app.use(cookieParser()); // Cookie parser middleware
 app.use(express.json()); // JSON body parser
 app.use(bodyParser.urlencoded({ extended: true })); // URL-encoded body parser
