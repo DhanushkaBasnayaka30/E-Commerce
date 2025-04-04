@@ -27,7 +27,7 @@ function LatestCollection() {
     fetchData();
   }, []);
   return (
-    <div className="my-10">
+    <div className="my-10 sm:w-[90%] mx-auto">
       <div className="text-center py-8 text-3xl sm:mt-24" data-aos="zoom-in">
         <Title text1="LATEST" text2="COLLECTION" />
         <p className="w-3/4 m-auto text-xs sm:text-sm md:text-base text-gray-600">

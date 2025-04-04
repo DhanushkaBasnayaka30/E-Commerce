@@ -37,19 +37,22 @@ function UserLayout() {
   return (
     <>
       <ToastContainer />
-      <div className="w-full sm:w-[90%] mx-auto">
-        <Navbar />
+      <div className="w-full sm:w-[100%] mx-auto bg-white ">
+        <div className=' w-full   mx-auto bg-white'>
+          <Navbar />
+        </div>
         <div
-          className={`w-[90%] mx-auto ease-in-out top-20 z-10 sm:fixed relative transition duration-500 ${
-            showSearch && visible ? 'translate-y-0' : '-translate-y-full'
-          }`}
+          className={`w-[90%] mx-auto ease-in-out top-20 z-10 sm:fixed relative transition duration-500 ${showSearch && visible ? 'translate-y-0' : '-translate-y-full'
+            }`}
         >
           <SearchBar />
         </div>
-        <div>
-          <Outlet/>
+        <div className='w-full sm:w-[100%] mx-auto'>
+          <Outlet />
         </div>
+        <div className='w-full sm:w-[100%] mx-auto bg-black'>
         <Footer />
+        </div>
       </div>
     </>
   );

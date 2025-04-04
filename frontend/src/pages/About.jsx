@@ -15,7 +15,7 @@ function About() {
 	}, []);
 	return (
 		<div  ref={visionMissionRef}
-    className={` w-full h-auto  mt-8 sm:mt-20  p-1${
+    className={` w-full h-auto  mt-8 sm:mt-20 sm:w-[90%] mx-auto p-1${
       visionMissionInView ? "transition-all duration-500  animate-fade-down animate-once animate-duration-1000 animate-delay-100 animate-ease-in-out animate-normal" : ""
     }`}>
 			<div>

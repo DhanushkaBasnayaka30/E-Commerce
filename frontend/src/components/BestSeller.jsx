@@ -31,7 +31,7 @@ function BestSeller() {
 
 
   return (
-    <div className='my-10'>
+    <div className='my-10 w-full sm:w-[90%] mx-auto'>
       <div className='text-center text-3xl py-8 flex flex-col items-center justify-center sm:mt-16' >
         <Title text1='BEST' text2="SELLER" />
         <p className='w-3/4 m-auro text-xs sm:text-sm md:text-base text-gray-600' >

@@ -115,7 +115,7 @@ function Collection() {
 	}, [sortType]);
 
 	return isLoading ? (
-		<>
+		<div className="sm:w-[90%] mx-auto">
 			<div className="w-auto  hidden top-0 sm:flex ransition-all duration-500">
 				<div
 					className={`min-w-60 sm:fixed top-20  z-10 h-auto sm:mt-8 p-4 transition-all duration-500 animate-fade-down animate-once animate-duration-1000 animate-delay-100 animate-ease-in-out animate-normal  ${showSearch} ?" b":"bg-red-400"`}
@@ -157,7 +157,7 @@ function Collection() {
 
 					{/* Subcategory Filter */}
 					<div
-						className={`border border-gray-300 pl-5 py-3 my-5 ${showFilter ? "" : "hidden sm:flex flex-col"
+						className={`border border-gray-300 pl-5 py-3 my-5 sm:w-[90%] mx-auto ${showFilter ? "" : "hidden sm:flex flex-col"
 							}`}>
 						<p className="mb-3 text-sm font-medium sm:text-base text-start">
 							Subcategory
@@ -328,7 +328,7 @@ function Collection() {
 				</div>
 			</div>
 			<div className="md:mt-24 mt-0 w-full"></div>
-		</>
+		</div>
 	) : (
 		<div className="flex items-center justify-center h-screen">
 			<Player autoplay loop src={loadingCom} style={{ height: '300px', width: '300px' }} />
